@@ -1,0 +1,34 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+:root{
+    --bg: #151518;
+    --primary: #FA4616;
+    --border: #3a3a3a;
+    --btn-bg: var(--primary);
+    --btn-text: #ffffff;
+    --control-bg: #2e2e2f;
+    --muted: #9c9ca6;
+    --text: #ffffff;
+    /* Variables para fondo gradiente */
+    --surface-1: rgba(33,33,36,1);
+    --surface-2: rgba(21,21,24,1);
+    --accent: rgba(179,53,18,0.246);
+    --accent-transparent: rgba(179,53,18,0);
+}
+
+html{
+    font-size: 10px;
+    background: var(--bg);
+}
+
+p{
+    font-size: 1.2rem;
+}
+
+* {
+    font-family: "Inter", sans-serif;
+    font-optical-sizing: auto;
+    color: var(--text);
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}

@@ -4,24 +4,29 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://kit.fontawesome.com/b86a0d0d2f.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="./css/global.css">
+    <link rel="stylesheet" href="./css/index.css">
     <title>Nuva - Inicio</title>
 </head>
 <body>
-    <header>
+    <header class="header">
         <div class="logo__container">
             <img class="logo__img" src="./assets/logo/nuva-main.svg" alt="">
         </div>
         <div class="header__actions">
             <button class="header__btn header__btn--settings">
-                <i class="fa-solid fa-gear"></i>
+                <i class="header__btn--icon fa-solid fa-gear"></i>
             </button>
         </div>
     </header>
-    <main>
+    <main class="main">
         <section class="hero__container">
-            <h1 class="hero__title"></h1>
-            <p class="hero__text"></p>
-            <a class="hero__btn" href="#"></a>
+            <h1 class="hero__title">Lorem ipsum dolor sit amet</h1>
+            <p class="hero__text">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Mollitia impedit minus voluptatem maxime minima autem, numquam commodi quod dolorum rem beatae itaque quos quo vel labore! Quia commodi voluptates vel.</p>
+            <a class="hero__btn" href="#">
+                Lorem ipsum dolor
+                <i class="fa-solid fa-angle-right"></i>
+            </a>
         </section>
         <section class="stats__container">
             <div class="stats__card">
@@ -31,6 +36,26 @@
             <div class="stats__card">
                 <h3 class="stats__qty">450+</h3>
                 <span>Competiciones</span>
+            </div>
+        </section>
+        <section class="modules">
+            <div>
+                <h3 class="modules__title">Explorar modulos</h3>
+            </div>
+            <div class="modules__list">
+                <button class="modules__card">
+                    <i class="modules__icon modules__icon--deporte-tradicional fa-regular fa-futbol"></i>
+                    <span class="modules__type">Deportes tradicionales</span>
+                </button>
+                <button class="modules__card">
+                    <i class="modules__icon modules__icon--deporte-mental fa-solid fa-chess"></i>
+                    <span class="modules__type">Deportes mentales</span>
+                </button>
+                <button class="modules__card">
+                    <i class="modules__icon modules__icon--esports fa-solid fa-gamepad"></i>
+                    <span class="modules__type">eSports</span>
+                </button>
+                
             </div>
         </section>
 
