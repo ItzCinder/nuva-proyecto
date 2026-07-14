@@ -1,19 +1,37 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
 :root{
+    /* color background = fondo */
     --bg: #151518;
+    /* color primario del sistema */
     --primary: #FA4616;
+    /* color usado para los bordes */
     --border: #3a3a3a;
+    /* color fondo de botones */
     --btn-bg: var(--primary);
+    /* color texto de los botones */
     --btn-text: #ffffff;
+    /* control background = para inputs, selects, textareas, checkboxes */
     --control-bg: #2e2e2f;
-    --muted: #9c9ca6;
+    /* color usado para iconos de botones ej: engranaje de config */
+    --icon-color: #e6e6e6;
+    /* Color usado para el texto */
     --text: #ffffff;
     /* Variables para fondo gradiente */
+    
+    /* capas de superficie para crear profundidad visual (más clara) */
     --surface-1: rgba(33,33,36,1);
+
+    /* capas de superficie para crear profundidad visual (más oscura) */
     --surface-2: rgba(21,21,24,1);
+
+    /* color acento con transparencia (naranja oscuro al 24.6%) */
     --accent: rgba(179,53,18,0.246);
+
+    /* color acento completamente transparente para gradientes */
     --accent-transparent: rgba(179,53,18,0);
 }
+
+/* Configuracion inical global de css GLOBAL */
 
 html{
     font-size: 10px;

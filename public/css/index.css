@@ -1,6 +1,3 @@
-/* background moved to global.css :root --bg */
-
-
 .logo__img{
     width: 13.5rem;
 
@@ -21,7 +18,7 @@
 
 }
 .header__btn--icon{
-    color: var(--muted);
+    color: var(--icon-color);
     font-size: 2.5rem;
 }
 .main{
