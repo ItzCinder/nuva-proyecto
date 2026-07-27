@@ -5,21 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://kit.fontawesome.com/b86a0d0d2f.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="./css/global.css">
+    <link rel="stylesheet" href="./css/header.css">
+    <link rel="stylesheet" href="./css/tabbar.css">
     <link rel="stylesheet" href="./css/index.css">
     <title>Nuva - Inicio</title>
 </head>
 <body>
-    <!-- HEADER de Nuva (Idea: separar e inyectar por JS) -->
-    <header class="header">
-        <div class="logo__container">
-            <img class="logo__img" src="./assets/logo/nuva-main.svg" alt="">
-        </div>
-        <div class="header__actions">
-            <button class="header__btn header__btn--settings">
-                <i class="header__btn--icon fa-solid fa-gear"></i>
-            </button>
-        </div>
-    </header>
     <!-- Contenido MAIN de Nuva - Donde va todo el contenido -->
     <main class="main">
         <section class="hero__container">
@@ -60,36 +51,6 @@
                 
             </div>
         </section>
-
     </main>
-    <!-- Barra navegadora de Nuva - Exclusivo mobile (Idea: separar e inyectar por JS) -->
-    <nav class="tab-bar">
-        <ul class="tab-bar__list">
-            
-            <li class="tab-bar__item">
-                <a class="tab-bar__link" href="#">
-                    <div class="tab-bar__icon-container">
-                        <i class="fa-solid fa-house"></i>
-                    </div>
-                    <span class="tab-bar__text">Home</span>
-                </a>
-            </li>
-            <li class="tab-bar__item">
-                <a class="tab-bar__link" href="#">
-                    <div class="tab-bar__icon-container">
-                        <i class="fa-solid fa-trophy"></i>
-                    </div>
-                    <span class="tab-bar__text">Competiciones</span>
-                </a>
-            </li>
-            <li class="tab-bar__item">
-                <a class="tab-bar__link" href="#">
-                    <div class="tab-bar__icon-container">
-                        <i class="fa-solid fa-user"></i>
-                    </div>
-                    <span class="tab-bar__text">Cuenta</span>
-                </a>
-            </li>
-    </nav>
 </body>
 </html>
