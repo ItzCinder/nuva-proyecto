@@ -34,3 +34,15 @@
 .tab-bar__text{
     color: var(--text-alternative);
 }
+
+.tab-bar__link.is-active {
+  color: var(--primary);
+}
+
+.tab-bar__link.is-active .tab-bar__icon {
+  color: var(--primary);
+}
+
+.tab-bar__link.is-active .tab-bar__text {
+  color: var(--primary);
+}
