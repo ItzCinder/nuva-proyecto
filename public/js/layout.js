@@ -13,6 +13,7 @@ document.addEventListener("DOMContentLoaded", () => {
             })
             .catch((error) => console.error(error));
     };
-    
 
+    loadComponent("header", "/public/components/header.html");
+    loadComponent("tab-bar", "/public/components/tabbar.html");
 });

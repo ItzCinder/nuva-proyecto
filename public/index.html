@@ -8,9 +8,12 @@
     <link rel="stylesheet" href="./css/header.css">
     <link rel="stylesheet" href="./css/tabbar.css">
     <link rel="stylesheet" href="./css/index.css">
+    <script src="js/layout.js" defer></script>
     <title>Nuva - Inicio</title>
-</head>
+</head>|
 <body>
+    <!-- Header inyectado mediante fetch -->
+    <header class="header" id="header"></header>
     <!-- Contenido MAIN de Nuva - Donde va todo el contenido -->
     <main class="main">
         <section class="hero__container">
@@ -52,5 +55,7 @@
             </div>
         </section>
     </main>
+    <!-- Navbar (tabbar) inyectado mediante fetch -->
+    <nav class="tab-bar" id="tab-bar"></nav>
 </body>
 </html>
