@@ -7,7 +7,7 @@
     padding: 2rem;
     border-top: .1rem var(--border) solid;
     box-sizing: border-box;
-    background: var(--bg);
+    background-color: var(--bg-secondary);
 }
 
 .tab-bar__list{
@@ -47,7 +47,7 @@
     font-size: 1.8rem;
 }
 
-.tab-bar__text{
+.tab-bar__text, .tab-bar__icon{
     color: var(--text-alternative);
 }
 

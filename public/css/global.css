@@ -1,7 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
 :root{
     /* color background = fondo */
-    --bg: #151518;
+    --bg: #0f0f11;
+    /* Coolor background secundario (usado para el navbar y el header */
+    --bg-secondary: #1e1e22;
     /* color primario del sistema */
     --primary: #FA4616;
     /* color usado para los bordes */
@@ -16,7 +18,7 @@
     --icon-color: #e6e6e6;
     /* Color usado para el texto */
     --text: #ffffff;
-    --text-alternative: #a8a8b3;
+    --text-alternative: #9aa0a6;
     /* Variables para fondo gradiente */
     
     /* capas de superficie para crear profundidad visual (más clara) */
@@ -50,4 +52,15 @@ p{
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+}
+a{
+    background-color: transparent;
+    outline: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+a:active,
+a:focus {
+  background-color: transparent;
+  outline: none;
 }
