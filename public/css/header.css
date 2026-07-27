@@ -1,0 +1,23 @@
+.logo__img{
+    width: 13.5rem;
+}
+
+.header{
+    padding: 1rem;
+    display: flex;
+    justify-content: space-between;
+    border-bottom: .1rem var(--border) solid;
+}
+
+.header__btn{
+    background: var(--control-bg);
+    border: none;
+    border-radius: 25%;
+    width: 4rem;
+    height: 4rem;
+}
+
+.header__btn--icon{
+    color: var(--icon-color);
+    font-size: 2.5rem;
+}

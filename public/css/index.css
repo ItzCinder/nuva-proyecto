@@ -1,26 +1,3 @@
-.logo__img{
-    width: 13.5rem;
-
-}
-
-.header{
-    padding: 1rem;
-    display: flex;
-    justify-content: space-between;
-    border-bottom: .1rem var(--border) solid;
-}
-.header__btn{
-    background: var(--control-bg);
-    border: none;
-    border-radius: 25%;
-    width: 4rem;
-    height: 4rem;
-
-}
-.header__btn--icon{
-    color: var(--icon-color);
-    font-size: 2.5rem;
-}
 .main{
     margin: 1rem 2.5rem;
 }
@@ -64,15 +41,23 @@
 }
 
 .stats__card{
+    display: flex;
+    flex-direction: column;
+    gap: .3rem;
     padding: 2rem;
     background-color: var(--control-bg);
     border-radius: 1rem;
     border: .1rem solid var(--border);
 }
 
+.stats__card > span{
+    color: var(--text-alternative);
+}
+
 .stats__qty{
     color: var(--primary);
-    font-size: 1.6rem;
+    font-size: 1.7rem;
+    font-weight: 900;
     text-align: center;
 }
 

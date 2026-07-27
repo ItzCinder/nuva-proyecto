@@ -1,0 +1,36 @@
+.tab-bar{
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 10;
+    padding: 2rem;
+    border-top: .1rem var(--border) solid;
+    box-sizing: border-box;
+    background: var(--bg);
+}
+
+.tab-bar__list{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    list-style: none;
+    width: 100%;
+    gap: 1rem;
+}
+
+.tab-bar__link{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: .4rem;
+    text-decoration: none;
+}
+
+.tab-bar__icon-container i{
+    font-size: 1.8rem;
+}
+
+.tab-bar__text{
+    color: var(--text-alternative);
+}
