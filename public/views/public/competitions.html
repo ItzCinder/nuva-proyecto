@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous" defer></script>
+    <link rel="stylesheet" href="../../css/global.css">
+    <link rel="stylesheet" href="../../css/header.css">
+    <link rel="stylesheet" href="../../css/tabbar.css">
+    <link rel="stylesheet" href="../../css/public/competitions.css">
+    <script src="../../js/layout.js" defer></script>
+    <title>Nuva - Cuenta</title>
+</head>
+<body>
+    <!-- Header inyectado mediante fetch -->
+    <header class="header" id="header"></header>
+    <main class="main">
+        <article class="comp">
+            <div class="d-flex justify-content-between align-items-center">
+                <h3 class="comp__title section-title">Competiciones activas</h3>
+                <a href="#">Ver todo</a>
+            </div>
+            <section class="comp__section">
+                <div class="comp__card">
+                    <div class="comp__card-logo">
+                        <i class="comp__card-icon" data-lucide="volleyball"></i>
+                    </div>
+                    <div class="comp__card-content">
+                        <div class="comp__card-header">
+                            <span class="comp__card-sport-tag">Futbol</span>
+                            <div class="comp__card-status">
+                                <span class="comp__card-status-dot"> En curso</span>
+                            </div>
+                        </div>
+                        <h3 class="comp__card-title">Liga ITS 2026</h3>
+                        <div class="comp__card-meta">
+                            <div class="comp__card-item">
+                                <i class="comp__card-icon" data-lucide="users"></i>
+                                <span>24 Jugadores</span>
+                            </div>
+                            <span>|</span>
+                            <div class="comp__card-item">
+                                <i class="comp__card-icon" data-lucide="trophy"></i>
+                                <span>Liga</span>
+                            </div>
+                        </div>
+                        <div class="comp__card-meta">
+                            <div class="comp__card-item">
+                                <i class="comp__card-icon" data-lucide="calendar-days"></i>
+                                <span>12 Mar - 28 Jun</span>
+                            </div>
+                        </div>
+                    </div>
+                    <i class="comp__card-icon" data-lucide="arrow-right"></i>
+                </div>
+            </section>
+        </article>
+    </main>
+
+    <!-- Navbar (tabbar) inyectado mediante fetch -->
+    <nav class="tab-bar" id="tab-bar"></nav>
+</body>
+</html>

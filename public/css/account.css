@@ -14,10 +14,10 @@
     gap: 1rem;
 }
 .login__container{
-    gap: 2.5rem
+    gap: 2.5rem;
 }
 .login__google-test{
-    width: 20rem;    
+    width: 20rem;
 }
 
 .login__container > span{

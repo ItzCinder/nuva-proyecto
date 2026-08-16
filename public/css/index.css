@@ -1,6 +1,3 @@
-.main{
-    margin: 2rem 2.5rem;
-}
 .hero__container{
     padding: 2rem;
     display: flex;
@@ -41,22 +38,20 @@
 }
 
 .stats__card{
-    display: flex;
-    flex-direction: column;
-    gap: .3rem;
-    padding: 2rem;
+    padding: 1.5rem;
     background-color: var(--control-bg);
     border-radius: 1rem;
     border: .1rem solid var(--border);
 }
 
-.stats__card > span{
+.stats__card span{
     color: var(--text-alternative);
+    font-size: 1.1rem;
 }
 
 .stats__qty{
     color: var(--primary);
-    font-size: 1.7rem;
+    font-size: 1.8rem;
     font-weight: 900;
     text-align: center;
 }
@@ -67,10 +62,6 @@
     gap: 1rem;
 }
 
-.modules__title{
-    font-size: 1.5rem;
-    font-weight: 600;
-}
 
 .modules__list{
     display: flex;
@@ -92,7 +83,14 @@
 }
 
 .modules__icon{
+    width: 4rem;
+    height: 4rem;
+    padding: .7rem;
+    border-radius: .5rem;
     font-size: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .modules__type{
@@ -100,15 +98,6 @@
     text-align: center;
     white-space: normal;
     word-break: break-word;
-}
-
-.modules__icon{
-    width: 4rem;
-    height: 4rem;
-    border-radius: .5rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
 }
 
 .modules__icon--deporte-tradicional{

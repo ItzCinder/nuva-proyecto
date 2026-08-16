@@ -1,4 +1,10 @@
 document.addEventListener("DOMContentLoaded", () => {
+    const renderIcons = () => {
+        if (window.lucide && typeof window.lucide.createIcons === "function") {
+            window.lucide.createIcons();
+        }
+    };
+
     // Funcion que indica si el enlace esta activo segun si el URL actual es el mismo que en el href del enlace
     const setActiveLink = (containerElement) => {
         const currentPath = window.location.pathname.split("/").pop() || "index.html";
@@ -15,7 +21,6 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     };
 
-
     const loadComponent = (id, file) => {
         const container = document.getElementById(id);
         if (!container) return;
@@ -30,10 +35,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 // Aplicar la función de enlace activo
                 setActiveLink(container);
+                renderIcons();
             })
-            .catch((error) => console.error(error));            
+            .catch((error) => console.error(error));
     };
 
     loadComponent("header", "/public/components/header.html");
     loadComponent("tab-bar", "/public/components/tabbar.html");
+    renderIcons();
 });
