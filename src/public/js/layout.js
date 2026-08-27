@@ -25,7 +25,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const container = document.getElementById(id);
         if (!container) return;
 
-        fetch(file)
+        fetch("/src/public/" + file)
             .then((response) => {
                 if (!response.ok) throw new Error(`Error al cargar, ${file}`);
                 return response.text();
@@ -40,7 +40,7 @@ document.addEventListener("DOMContentLoaded", () => {
             .catch((error) => console.error(error));
     };
 
-    loadComponent("header", "/public/components/header.html");
-    loadComponent("tab-bar", "/public/components/tabbar.html");
+    loadComponent("header", "components/header.html");
+    loadComponent("tab-bar", "components/tabbar.html");
     renderIcons();
 });
