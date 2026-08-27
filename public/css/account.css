@@ -1,0 +1,28 @@
+.login__logo-nuva__wordmark{
+    width: 20rem;
+}
+.login__logo-nuva{
+    width: 16rem;
+}
+.login__container, .login__logo-container{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.login__logo-container{
+    padding-top: 7rem;
+    gap: 1rem;
+}
+.login__container{
+    gap: 2.5rem;
+}
+.login__google-test{
+    width: 20rem;
+}
+
+.login__container > span{
+    color: var(--text-alternative);
+    font-size: 1.3rem;
+    text-align: center;
+    width: 75%;
+}

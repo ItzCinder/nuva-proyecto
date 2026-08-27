@@ -1,0 +1,130 @@
+.comp a {
+    color: var(--primary);
+    font-size: .9rem;
+    font-weight: 500;
+}
+
+.comp__section{
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+    margin-top: 1rem;
+}
+
+/* Estilo de la tarjeta */
+.comp__card {
+    background-color: var(--control-bg);
+    border: .1rem solid var(--border);
+    border-radius: 1.6rem;
+    padding: 1.6rem;
+    display: flex;
+    align-items: center;
+    gap: 1.4rem;
+    position: relative;
+    cursor: pointer;
+}
+
+/* Card Logo */
+.comp__card-logo{
+    width: 6.4rem;
+    height: 6.4rem;
+    background-color: #1a1d24;
+    border: 1px solid #282c37;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.comp__card-icon {
+    color: var(--primary);
+    width: 3.6rem;
+    height: 3.6rem;
+    object-fit: contain;
+}
+
+.comp__card-icon[data-lucide] {
+  display: block;
+}
+
+/* Contenido principal de la CARD */
+.comp__card-content{
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: .6rem;
+}
+
+.comp__card-header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.comp__card-sport-tag{
+    background-color: var(--color-tag-bg);
+    color: var(--primary);
+    font-size: .7rem;
+    font-weight: 800;
+    padding: .3rem .8rem;
+    border-radius: .6rem;
+    letter-spacing: 1px;
+}
+
+.comp__card-status{
+    display: flex;
+    align-items: center;
+    font-size: .8rem;
+    color: var(--green);
+    font-weight: 500;
+}
+
+.comp__card-status-dot::before {
+  content: "";
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  background-color: var(--green);
+  border-radius: 50%;
+  margin-right: 6px;
+  vertical-align: middle;
+}
+
+.comp__card-title {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--text);
+  margin: 2px 0 0 0;
+}
+
+/* Filass d los metadatos */
+.comp__card-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--text-alternative);
+  font-size: 0.82rem;
+}
+
+.comp__card-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.comp__card-meta .comp__card-icon {
+  width: 15px;
+  height: 15px;
+  object-fit: contain;
+}
+
+/* Flecha Derecha */
+.comp__card > .comp__card-icon {
+  width: 16px;
+  height: 16px;
+  position: absolute;
+  right: 16px;
+  bottom: 16px;
+  object-fit: contain;
+}
