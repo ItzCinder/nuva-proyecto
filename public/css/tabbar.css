@@ -62,3 +62,13 @@
 .tab-bar__link.is-active .tab-bar__text {
   color: var(--primary);
 }
+
+.tab-bar {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: var(--tabbar-height);
+    z-index: 10;
+    background-color: var(--bg-secondary);
+}

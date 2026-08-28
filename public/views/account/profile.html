@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="../../css/bootstrap.min.css" rel="stylesheet">
+    <script src="../../js/bootstrap.bundle.min.js" defer></script>
+    <link rel="stylesheet" href="../../css/global.css">
+    <link rel="stylesheet" href="../../css/header.css">
+    <link rel="stylesheet" href="../../css/tabbar.css">
+    <link rel="stylesheet" href="../../css/account/profile.css">
+    <link rel="stylesheet" href="../../css/public/competitions.css">
+    <script src="../../js/layout.js" defer></script>
+    <title>Nuva - Cuenta</title>
+</head>
+<body>
+    <!-- Header inyectado mediante fetch -->
+    <header class="header" id="header"></header>
+    
+    <main class="main">
+        <div class="profile d-flex flex-column justify-content-center align-items-center mb-3 row-gap-3">
+            <div class="profile__avatar--container">
+                <img class="profile__avatar" src="https://i.pravatar.cc/200?img=13" alt="Foto de perfil"/>
+            </div>
+            <div class="profile__info">
+                <h1 class="profile__name">Martin Fernandez</h1>
+                <a class="profile__email anchor-not-style" href="mailto:martin.fernandez@nuva.com">martin.fernandez@nuva.com</a>
+            </div>
+            <data class="profile__id" value="000001">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" width="14" height="14"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5Z"/></svg>
+                ID · #000001
+            </data>
+        </div>
+        <div class="nuva-separator"></div>
+        <article class="comp mb-3">
+            <div class="d-flex justify-content-between align-items-center">
+                <h3 class="comp__title section-title">Mis torneos</h3>
+                <a class="nuva-anchor" href="#">Ver todo</a>
+            </div>
+            <section class="comp__section">
+
+                <!-- DATOS DE DEMOSTRACIÓN-->
+                 <!-- LA IDEA ES QUE NO SE MUESTRE MAS DE 3 O 4 COMPETICIONES Y TENGAS QUE DARLE A VER TODO PARA VER LAS DEMÁS + USAR LOS FILTROS DE BUSQUEDA QUE SE AÑADIRAN EN ESA SECCIÓN-->
+                 <div class="comp__card">
+                    <div class="comp__card-logo">
+                        <i class="comp__card-icon" data-lucide="volleyball"></i>
+                    </div>
+                    <div class="comp__card-content">
+                        <div class="comp__card-header">
+                            <span class="comp__card-sport-tag">Basquetbol</span>
+                            <div class="comp__card-status">
+                                <span class="comp__card-status-dot"> En curso</span>
+                            </div>
+                        </div>
+                        <h3 class="comp__card-title">Liga Bassktel 2026</h3>
+                        <div class="comp__card-meta">
+                            <div class="comp__card-item">
+                                <i class="comp__card-icon" data-lucide="users"></i>
+                                <span>24 Jugadores</span>
+                            </div>
+                            <span>|</span>
+                            <div class="comp__card-item">
+                                <i class="comp__card-icon" data-lucide="trophy"></i>
+                                <span>Liga</span>
+                            </div>
+                        </div>
+                        <div class="comp__card-meta">
+                            <div class="comp__card-item">
+                                <i class="comp__card-icon" data-lucide="calendar-days"></i>
+                                <span>12 Mar - 28 Jun</span>
+                            </div>
+                        </div>
+                    </div>
+                    <i class="comp__card-icon" data-lucide="arrow-right"></i>
+                </div>
+                <div class="comp__card">
+                    <div class="comp__card-logo">
+                        <i class="comp__card-icon" data-lucide="volleyball"></i>
+                    </div>
+                    <div class="comp__card-content">
+                        <div class="comp__card-header">
+                            <span class="comp__card-sport-tag">Ajedrez</span>
+                            <div class="comp__card-status">
+                                <span class="comp__card-status-dot"> En curso</span>
+                            </div>
+                        </div>
+                        <h3 class="comp__card-title">Torneo Ajederez 2026</h3>
+                        <div class="comp__card-meta">
+                            <div class="comp__card-item">
+                                <i class="comp__card-icon" data-lucide="users"></i>
+                                <span>16 Jugadores</span>
+                            </div>
+                            <span>|</span>
+                            <div class="comp__card-item">
+                                <i class="comp__card-icon" data-lucide="trophy"></i>
+                                <span>Sistema Suizo</span>
+                            </div>
+                        </div>
+                        <div class="comp__card-meta">
+                            <div class="comp__card-item">
+                                <i class="comp__card-icon" data-lucide="calendar-days"></i>
+                                <span>12 Mar - 12 Sep</span>
+                            </div>
+                        </div>
+                    </div>
+                    <i class="comp__card-icon" data-lucide="arrow-right"></i>
+                </div>
+                <div class="comp__card">
+                    <div class="comp__card-logo">
+                        <i class="comp__card-icon" data-lucide="volleyball"></i>
+                    </div>
+                    <div class="comp__card-content">
+                        <div class="comp__card-header">
+                            <span class="comp__card-sport-tag">Futbol</span>
+                            <div class="comp__card-status">
+                                <span class="comp__card-status-dot"> En curso</span>
+                            </div>
+                        </div>
+                        <h3 class="comp__card-title">Liga ITS 2026</h3>
+                        <div class="comp__card-meta">
+                            <div class="comp__card-item">
+                                <i class="comp__card-icon" data-lucide="users"></i>
+                                <span>24 Jugadores</span>
+                            </div>
+                            <span>|</span>
+                            <div class="comp__card-item">
+                                <i class="comp__card-icon" data-lucide="trophy"></i>
+                                <span>Liga</span>
+                            </div>
+                        </div>
+                        <div class="comp__card-meta">
+                            <div class="comp__card-item">
+                                <i class="comp__card-icon" data-lucide="calendar-days"></i>
+                                <span>12 Mar - 28 Jun</span>
+                            </div>
+                        </div>
+                    </div>
+                    <i class="comp__card-icon" data-lucide="arrow-right"></i>
+                </div>
+            </section>
+        </article>
+        <div class="nuva-separator"></div>
+        <article class="workspace">
+            <div class="d-flex justify-content-between align-items-center">
+                <h3 class="workspace__title section-title">Mis entornos</h3>
+                <a class="nuva-anchor" href="#">Ver todo</a>
+            </div>
+        </article>
+    </main>
+
+    <!-- Navbar (tabbar) inyectado mediante fetch -->
+    <nav class="tab-bar" id="tab-bar"></nav>
+</body>
+</html>

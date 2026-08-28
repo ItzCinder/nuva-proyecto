@@ -38,6 +38,8 @@
 
     /* color acento completamente transparente para gradientes */
     --accent-transparent: rgba(224, 68, 24, 0);
+
+    --tabbar-height: 7rem;
 }
 
 /* Configuracion inical global de css GLOBAL */
@@ -51,44 +53,41 @@ body{
     background: var(--bg);
     font-family: "Inter", sans-serif;
     color: var(--text);
+    height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    padding-bottom: var(--tabbar-height);
 }
 
-p{
-    font-size: 1.2rem;
-}
-
-* {
-    font-optical-sizing: auto;
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-a{
-    color: inherit;
-    background-color: transparent;
-    outline: none;
-    -webkit-tap-highlight-color: transparent;
-}
-
-button,
-input,
-textarea,
-select{
-    color: inherit;
-    font: inherit;
-}
-
-a:active,
-a:focus {
-  background-color: transparent;
-  outline: none;
-}
-
-.section-title{
-    font-size: 1.5rem;
-    font-weight: 600;
+.anchor-not-style{
+    text-decoration: none;
 }
 
 .main{
-    margin: 2rem 2.5rem;
+    flex: 1;
+    min-height: 0;
+    margin: 2rem 2.5rem 0;
+    padding-bottom: 2rem;
+    overflow-y: auto;
+}
+
+.nuva-anchor {
+    color: var(--primary);
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.nuva-separator {
+    width: 100%;
+    height: 1px;
+    margin: 2rem 0;
+    background: var(--border);
+}
+
+.section-title{
+    font-size: 1.7rem;
+    font-weight:800;
+    color: var(--text);
+
 }
