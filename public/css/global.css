@@ -67,9 +67,11 @@ body{
 .main{
     flex: 1;
     min-height: 0;
+    min-width: 0;
     margin: 2rem 2.5rem 0;
     padding-bottom: 2rem;
     overflow-y: auto;
+    overflow-x: hidden;
 }
 
 .nuva-anchor {
