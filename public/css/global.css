@@ -94,3 +94,38 @@ body{
     color: var(--text);
 
 }
+
+/* Estilo de Cards (Tarjetas) */
+.nuva-card{
+    background-color: var(--control-bg);
+    border: .1rem solid var(--border);
+    border-radius: .8rem;
+}
+
+.nuva-card--interactive{
+    cursor: pointer;
+    transition: border .2s ease;
+}
+
+.nuva-card--interactive:hover{
+    border-color: var(--primary);
+}
+
+/* Etiquetas / Insignias (Badges) */
+.nuva-badge{
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: .5rem;
+    background-color: var(--color-tag-bg);
+    color: var(--primary);
+    border: 1px solid rgba(255, 90, 54, 0.2);
+    font-weight: 700;
+    border-radius: 0.6rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.nuva-badge--pill{
+    border-radius: 9999px;
+}

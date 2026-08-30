@@ -8,15 +8,11 @@
 
 /* Estilo de la tarjeta */
 .comp__card {
-    background-color: var(--control-bg);
-    border: .1rem solid var(--border);
-    border-radius: 1.6rem;
     padding: 1.6rem;
     display: flex;
     align-items: center;
     gap: 1.4rem;
     position: relative;
-    cursor: pointer;
 }
 
 /* Card Logo */
@@ -56,15 +52,9 @@
     justify-content: space-between;
     align-items: center;
 }
-
 .comp__card-sport-tag{
-    background-color: var(--color-tag-bg);
-    color: var(--primary);
-    font-size: .7rem;
-    font-weight: 800;
-    padding: .3rem .8rem;
-    border-radius: .6rem;
-    letter-spacing: 1px;
+  padding: .2rem .6rem;
+  font-size: .7rem;
 }
 
 .comp__card-status{

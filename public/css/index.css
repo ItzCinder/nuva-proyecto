@@ -42,9 +42,6 @@
 
 .stats__card{
     padding: 1.5rem;
-    background-color: var(--control-bg);
-    border-radius: 1rem;
-    border: .1rem solid var(--border);
 }
 
 .stats__card span{
@@ -74,9 +71,6 @@
 }
 
 .modules__card{
-    background: var(--control-bg);
-    border-radius: 1.2rem;
-    border: .1rem solid var(--border);
     display: flex;
     gap: 1.5rem;
     flex-direction: column;
