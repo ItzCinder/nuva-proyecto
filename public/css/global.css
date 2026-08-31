@@ -129,3 +129,19 @@ body{
 .nuva-badge--pill{
     border-radius: 9999px;
 }
+
+/* Boton */
+.nuva-btn{
+    all: unset;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    background: var(--btn-bg);
+    color: var(--btn-text);
+    padding: 1rem 1.6rem;
+    font-weight: 600;
+    font-size: 1.5rem;
+    text-decoration: none;
+    border-radius: 1.2rem;
+}

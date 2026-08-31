@@ -16,23 +16,21 @@
 }
 
 .hero__btn{
-    all: unset;
-    display: inline-block;
-    cursor: pointer;
-    background: var(--btn-bg);
-    color: var(--btn-text);
-    padding: 1rem 1.6rem;
-    font-weight: 600;
-    font-size: 1.5rem;
-    text-decoration: none;
-    border-radius: 1.2rem;
     align-self: flex-start;
+    column-gap: .5rem;
+}
+
+.hero__btn--icon{
+    width: 2rem;
+    height: 2rem;
 }
 
 .stats__container{
     display: flex;
     gap: 2rem;
 }
+
+
 
 .stats__container > .col-6 {
     width: auto;
