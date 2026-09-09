@@ -45,7 +45,10 @@ switch ($page) {
     case 'loginauth':
         $render('login');
         break;
-
+    /*
+    Borra las creedenciales de sesión.
+    Despues lo vuelve a mandar para iniciar sesión.
+    */
     case 'logout':
         $_SESSION = [];
         session_destroy();
@@ -64,8 +67,46 @@ switch ($page) {
         $render('account/profile');
         break;
 
+    case 'google-callback':
+        require_once dirname(__DIR__) . '/vendor/autoload.php';
+        require_once dirname(__DIR__) . '/app/Services/GoogleAuthService.php';
+
+        $service = new \App\Services\GoogleAuthService();
+
+        if (empty($_GET['code']) || !is_string($_GET['code'])) {
+            http_response_code(400);
+            echo 'Código de autorización no encontrado';
+            exit;
+        }
+
+        $userInfo = $service->getUserInfoFromCode($_GET['code']);
+
+        echo '<pre>';
+        print_r($userInfo);
+        echo '</pre>';
+        exit;
+
+    case 'google-login':
+        require_once dirname(__DIR__) . '/vendor/autoload.php';
+        require_once dirname(__DIR__) . '/app/Services/GoogleAuthService.php';
+
+        $service = new \App\Services\GoogleAuthService();
+
+        header('Location: ' . $service->getAuthUrl());
+        exit;
+
     default:
         http_response_code(404);
         echo '<a href="?page=login">Login</a>';
         break;
+}
+
+$env = parse_ini_file(dirname(__DIR__) . '/.env', false, INI_SCANNER_RAW);
+
+if ($env === false) {
+    throw new RuntimeException('No se pudo cargar el archivo .env');
+}
+
+foreach ($env as $key => $value) {
+    $_ENV[$key] = $value;
 }
