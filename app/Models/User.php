@@ -2,7 +2,7 @@
 
 namespace app\Models;
 
-class User {
+class User extends Model {
     private ?int $id;
     private ?int $roleId;
     private ?string $googleId;
@@ -20,6 +20,7 @@ class User {
         ?int $id = null,
         ?string $createdAt = null
     ) {
+        parent::__construct();
         $this->id = $id;
         $this->roleId = $roleId;
         $this->googleId = $googleId;
@@ -106,5 +107,136 @@ class User {
     {
         $this->createdAt = $createdAt;
         return $this;
-   }
+    }
+
+    // --- DATABASE METHODS ---
+
+    /*
+    Metodo "Inteligente"
+    Puede decir si hacer UPDATE o INSERT basandose en si le proporcionas el id o no.
+    Si el ID proporcionado no existe en la BD directamente no hace nada xd
+    */
+    public function save(): bool
+    {
+        if ($this->id === null) {
+            return $this->insert();
+        }
+        return $this->update();
+    }
+
+    private function insert(): bool
+    {
+        $sql = "INSERT INTO users (email, name, google_id, picture_url, role_id, created_at) 
+                VALUES (:email, :name, :google_id, :picture_url, :role_id, :created_at)";
+        
+        $stmt = $this->db->prepare($sql);
+        $result = $stmt->execute([
+            ':email'         => $this->email,
+            ':name'          => $this->name,
+            ':google_id'     => $this->googleId,
+            ':picture_url'   => $this->pictureUrl,
+            ':role_id'       => $this->roleId,
+            ':created_at'    => $this->createdAt ?? date('Y-m-d H:i:s'),
+        ]);
+
+        if ($result) {
+            $this->id = (int) $this->db->lastInsertId();
+        }
+
+        return $result;
+    }
+
+    private function update(): bool
+    {
+        $sql = "UPDATE users SET email = :email, name = :name, google_id = :google_id, 
+                picture_url = :picture_url, role_id = :role_id WHERE id = :id";
+        
+        $stmt = $this->db->prepare($sql);
+        return $stmt->execute([
+            ':email'       => $this->email,
+            ':name'        => $this->name,
+            ':google_id'   => $this->googleId,
+            ':picture_url' => $this->pictureUrl,
+            ':role_id'     => $this->roleId,
+            ':id'          => $this->id,
+        ]);
+    }
+
+    /*
+    Encontrar usuario por ID
+    */
+    public static function findById(int $id): ?User
+    {
+        $db = \Database::getConnection();
+        $sql = "SELECT * FROM users WHERE id = :id";
+        $stmt = $db->prepare($sql);
+        $stmt->execute([':id' => $id]);
+        $row = $stmt->fetch();
+
+        if (!$row) {
+            return null;
+        }
+
+        return new self(
+            $row['email'],
+            $row['name'],
+            $row['role_id'],
+            $row['google_id'],
+            $row['picture_url'],
+            $row['id'],
+            $row['created_at']
+        );
+    }
+
+    /*
+    Encontrar usuario por Email
+    */
+    public static function findByEmail(string $email): ?User
+    {
+        $db = \Database::getConnection();
+        $sql = "SELECT * FROM users WHERE email = :email";
+        $stmt = $db->prepare($sql);
+        $stmt->execute([':email' => $email]);
+        $row = $stmt->fetch();
+
+        if (!$row) {
+            return null;
+        }
+
+        return new self(
+            $row['email'],
+            $row['name'],
+            $row['role_id'],
+            $row['google_id'],
+            $row['picture_url'],
+            $row['id'],
+            $row['created_at']
+        );
+    }
+
+    /*
+    Encontrar usuario por GoogleID
+    */
+    public static function findByGoogleId(string $googleId): ?User
+    {
+        $db = \Database::getConnection();
+        $sql = "SELECT * FROM users WHERE google_id = :google_id";
+        $stmt = $db->prepare($sql);
+        $stmt->execute([':google_id' => $googleId]);
+        $row = $stmt->fetch();
+
+        if (!$row) {
+            return null;
+        }
+
+        return new self(
+            $row['email'],
+            $row['name'],
+            $row['role_id'],
+            $row['google_id'],
+            $row['picture_url'],
+            $row['id'],
+            $row['created_at']
+        );
+    }
 }
