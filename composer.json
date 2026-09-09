@@ -3,7 +3,6 @@
         "process-timeout": 0
     },
     "require": {
-        "league/oauth2-google": "^5.0",
-        "vlucas/phpdotenv": "*"
+        "league/oauth2-google": "^5.0"
     }
 }
