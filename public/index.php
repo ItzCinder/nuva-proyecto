@@ -18,6 +18,10 @@ $render = static function (string $view) use ($viewsPath): void {
     require $file;
 };
 
+/*
+Para verificar si el usuario esta aunteticado.
+Si no esta aunteticado lo manda al home-public.
+*/
 $isAuthenticated = static function (): bool {
     return !empty($_SESSION['authenticated']);
 };
