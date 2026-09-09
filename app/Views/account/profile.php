@@ -4,19 +4,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://unpkg.com/lucide@latest"></script>
-    <link href="../../css/bootstrap.min.css" rel="stylesheet">
-    <script src="../../js/bootstrap.bundle.min.js" defer></script>
-    <link rel="stylesheet" href="../../css/global.css">
-    <link rel="stylesheet" href="../../css/components/header.css">
-    <link rel="stylesheet" href="../../css/components/tabbar.css">
-    <link rel="stylesheet" href="../../css/account/profile.css">
-    <link rel="stylesheet" href="../../css/public/competitions.css">
-    <script src="../../js/layout.js" defer></script>
+    <link href="/public/css/bootstrap.min.css" rel="stylesheet">
+    <script src="/public/js/bootstrap.bundle.min.js" defer></script>
+    <link rel="stylesheet" href="/public/css/global.css">
+    <link rel="stylesheet" href="/public/css/components/header.css">
+    <link rel="stylesheet" href="/public/css/components/tabbar.css">
+    <link rel="stylesheet" href="/public/css/account/profile.css">
+    <link rel="stylesheet" href="/public/css/public/competitions.css">
+    <script src="/public/js/layout.js" defer></script>
     <title>Nuva - Cuenta</title>
 </head>
 <body>
-    <!-- Header inyectado mediante fetch -->
-    <header class="header" id="header"></header>
+    <!-- Header inyectado mediante-->
+    <header class="header">
+        <?php require __DIR__ . '/../components/header.php'; ?>
+    </header>
     
     <main class="main">
         <div class="profile d-flex flex-column justify-content-center align-items-center mb-3 row-gap-3">
@@ -149,7 +151,9 @@
         </article>
     </main>
 
-    <!-- Navbar (tabbar) inyectado mediante fetch -->
-    <nav class="tab-bar" id="tab-bar"></nav>
+    <!-- Navbar (tabbar) inyectado mediante -->
+    <nav class="tab-bar">
+        <?php require __DIR__ . '/../components/tabbar.php'; ?>
+    </nav>
 </body>
 </html>
