@@ -67,6 +67,9 @@ switch ($page) {
         $render('account/profile');
         break;
 
+        /*
+        Para pruebas, recibir la llamada de Google Auth.
+        */
     case 'google-callback':
         require_once dirname(__DIR__) . '/vendor/autoload.php';
         require_once dirname(__DIR__) . '/app/Services/GoogleAuthService.php';
@@ -86,6 +89,9 @@ switch ($page) {
         echo '</pre>';
         exit;
 
+        /*
+        Enrutamiento para loguearte con Google.
+        */
     case 'google-login':
         require_once dirname(__DIR__) . '/vendor/autoload.php';
         require_once dirname(__DIR__) . '/app/Services/GoogleAuthService.php';
