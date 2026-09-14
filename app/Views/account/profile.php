@@ -23,15 +23,26 @@
     <main class="main">
         <div class="profile d-flex flex-column justify-content-center align-items-center mb-3 row-gap-3">
             <div class="profile__avatar--container">
-                <img class="profile__avatar" src="https://i.pravatar.cc/200?img=13" alt="Foto de perfil"/>
+                <?php
+                $pictureUrl = $user->getPictureUrl();
+
+                if (!is_string($pictureUrl) || $pictureUrl === '') {
+                    $pictureUrl = '/public/assets/logo/icon-main.svg';
+                }
+                ?>
+                <img class="profile__avatar" src="<?= htmlspecialchars($pictureUrl, ENT_QUOTES, 'UTF-8') ?>" alt="Foto de perfil"/>
             </div>
             <div class="profile__info">
-                <h1 class="profile__name">Martin Fernandez</h1>
-                <a class="profile__email anchor-not-style" href="mailto:martin.fernandez@nuva.com">martin.fernandez@nuva.com</a>
+                <h1 class="profile__name text-center">
+                    <?= htmlspecialchars($user->getName(), ENT_QUOTES, 'UTF-8') ?>
+                </h1>
+                <a class="profile__email anchor-not-style" href="mailto:<?= htmlspecialchars($user->getEmail(), ENT_QUOTES, 'UTF-8') ?>">
+                    <?= htmlspecialchars($user->getEmail(), ENT_QUOTES, 'UTF-8') ?>
+                </a>
             </div>
-            <data class="profile__id nuva-badge" value="000001">
+            <data class="profile__id nuva-badge" value="<?= (int) $user->getId() ?>">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" width="14" height="14"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5Z"/></svg>
-                ID · #000001
+                ID · #<?= str_pad((string) $user->getId(), 6, '0', STR_PAD_LEFT) ?>
             </data>
         </div>
         <div class="nuva-separator"></div>

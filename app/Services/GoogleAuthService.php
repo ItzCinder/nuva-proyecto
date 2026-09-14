@@ -38,11 +38,21 @@ class GoogleAuthService
         $owner = $this->provider->getResourceOwner($accessToken);
         $data = $owner->toArray();
 
+        $pictureUrl = $data['picture'] ?? null;
+
+        if (is_string($pictureUrl)) {
+            $pictureUrl = preg_replace(
+                '/=s\d+(-c)?$/',
+                '=s512-c',
+                $pictureUrl
+            );
+        }
+
         return [
-            'google_id'   => $data['sub'] ?? $data['id'] ?? null,
-            'email'       => $data['email'] ?? null,
-            'name'        => $data['name'] ?? null,
-            'picture_url' => $data['picture'] ?? null,
+            'google_id' => $data['sub'] ?? $data['id'] ?? null,
+            'email' => $data['email'] ?? null,
+            'name' => $data['name'] ?? null,
+            'picture_url' => $pictureUrl,
         ];
     }
 }

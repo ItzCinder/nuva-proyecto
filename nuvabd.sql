@@ -9,7 +9,7 @@ CREATE TABLE `users` (
   `google_id` VARCHAR(500) NOT NULL,
   `email` VARCHAR(500) NOT NULL,
   `name` VARCHAR(500) NOT NULL,
-  `picture_url` TEXT NOT NULL,
+  `picture_url` TEXT NULL,
   `created_at` TIMESTAMP NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -175,7 +175,7 @@ CREATE TABLE `tournament_participant_stat_values` (
   `value` INT NOT NULL,
   `updated_at` TIMESTAMP,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `idx_tournament_participant_stat_values_id_tournament_team_id_member_id_stat_type_id` (`id_tournament`, `team_id`, `member_id`, `stat_type_id`),
+  UNIQUE KEY `idx_tournament_participant_stat_values_id_tournament_te_dcc88df0` (`id_tournament`, `team_id`, `member_id`, `stat_type_id`),
   CONSTRAINT `fk_tournament_participant_stat_values_stat_type_id_1` FOREIGN KEY (`stat_type_id`) REFERENCES `member_stat_types` (`id`),
   CONSTRAINT `fk_tournament_participant_stat_values_id_tournament_2` FOREIGN KEY (`id_tournament`) REFERENCES `tournament` (`id`),
   CONSTRAINT `fk_tournament_participant_stat_values_member_id_3` FOREIGN KEY (`member_id`) REFERENCES `tournament_members` (`id`),

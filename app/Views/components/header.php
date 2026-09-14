@@ -2,7 +2,7 @@
     <img class="logo__img" src="/public/assets/logo/nuva-main.svg" alt="Nuva">
 </div>
 <div class="header__actions">
-    <button class="header__btn header__btn--settings" type="button" aria-label="Configuracion">
+    <!-- <button class="header__btn header__btn--settings" type="button" aria-label="Configuracion">
         <i class="header__btn--icon" data-lucide="settings"></i>
-    </button>
+    </button> -->
 </div>

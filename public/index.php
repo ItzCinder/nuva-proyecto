@@ -1,5 +1,4 @@
 <?php
-
 declare(strict_types=1);
 $sessionLifetime = 60 * 60 * 24 * 30; // 30 Dias
 
@@ -31,7 +30,14 @@ foreach ($env as $key => $value) {
 
 $viewsPath = dirname(__DIR__) . '/app/Views';
 
-$render = static function (string $view) use ($viewsPath): void {
+/*
+    Cargar y mostrar vista PHP.
+    Permite cargar datos.
+*/
+$render = static function (
+    string $view,
+    array $data = []
+) use ($viewsPath): void {
     $file = $viewsPath . '/' . ltrim($view, '/') . '.php';
 
     if (!is_file($file)) {
@@ -40,6 +46,7 @@ $render = static function (string $view) use ($viewsPath): void {
         return;
     }
 
+    extract($data, EXTR_SKIP);
     require $file;
 };
 
@@ -109,7 +116,33 @@ switch ($page) {
             $render('login');
             break;
         }
-        $render('account/profile');
+        require_once dirname(__DIR__) . '/app/Services/Database.php';
+        require_once dirname(__DIR__) . '/app/Models/Model.php';
+        require_once dirname(__DIR__) . '/app/Models/User.php';
+
+        $userId = $_SESSION['user_id'] ?? null;
+
+        /*
+        Verificar si existe un usuario valido en la sesión.
+        */
+         if (!is_int($userId) && !ctype_digit((string) $userId)) {
+            $_SESSION = [];
+            session_destroy();
+            header('Location: ?page=login');
+            exit;
+        }
+
+        $user = \app\Models\User::findById((int) $userId);
+
+        if ($user === null) {
+            $_SESSION = [];
+            session_destroy();
+            header('Location: ?page=login');
+            exit;
+        }
+        $render('account/profile', [
+            'user' => $user,
+        ]);
         break;
 
         /*
@@ -117,7 +150,11 @@ switch ($page) {
         */
     case 'google-callback':
         require_once dirname(__DIR__) . '/vendor/autoload.php';
+        require_once dirname(__DIR__) . '/app/Services/Database.php';
         require_once dirname(__DIR__) . '/app/Services/GoogleAuthService.php';
+        require_once dirname(__DIR__) . '/app/Services/UserService.php';
+        require_once dirname(__DIR__) . '/app/Models/Model.php';
+        require_once dirname(__DIR__) . '/app/Models/User.php';
 
         if (empty($_GET['error'])) {
             $state = $_GET['state'] ?? null;
@@ -152,10 +189,22 @@ switch ($page) {
             exit;
         }
 
+        /*
+        Guardar usuario en la base de datos
+        */
+        try {
+            $userService = new \App\Services\UserService();
+            $user = $userService->findOrCreateFromGoogle($userInfo);
+        } catch (Throwable $exception) {
+            http_response_code(500);
+            echo 'No se pudo guardar el usuario';
+            exit;
+        }
+
         unset($_SESSION['oauth2state']);
         session_regenerate_id(true);
         $_SESSION['authenticated'] = true;
-        $_SESSION['user'] = $userInfo;
+        $_SESSION['user_id'] = $user->getId();
 
         header('Location: ?page=index');
         exit;
@@ -167,6 +216,7 @@ switch ($page) {
         if (!$isAuthenticated()) {
             require_once dirname(__DIR__) . '/vendor/autoload.php';
             require_once dirname(__DIR__) . '/app/Services/GoogleAuthService.php';
+            
 
             $service = new \App\Services\GoogleAuthService();
 
