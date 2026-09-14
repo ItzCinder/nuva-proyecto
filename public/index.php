@@ -1,10 +1,22 @@
 <?php
 
 declare(strict_types=1);
+$sessionLifetime = 60 * 60 * 24 * 30; // 30 Dias
 
+ini_set('session.gc_maxlifetime', (string) $sessionLifetime);
 /*
-Buscar cookies de sesión en el navegador
+    Establecer cookies de sesion
 */
+session_set_cookie_params([
+    'lifetime' => $sessionLifetime,
+    'path' => '/',
+    /*
+        La condicion HTTPS sirve para evitar que la cookie viaje por conexiones no seguras (HTTP)
+    */
+    'secure' => isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off',
+    'httponly' => true,
+    'samesite' => 'Lax',
+]);
 session_start();
 
 $env = parse_ini_file(dirname(__DIR__) . '/.env', false, INI_SCANNER_RAW);
@@ -66,6 +78,19 @@ switch ($page) {
     Despues lo vuelve a mandar para iniciar sesión.
     */
     case 'logout':
+        /*
+        Eliminar cookies
+        */
+        $params = session_get_cookie_params();
+        setcookie(session_name(), '', [
+            'expires' => time() - 42000,
+            'path' => $params['path'],
+            'domain' => $params['domain'] ?? '',
+            'secure' => $params['secure'],
+            'httponly' => $params['httponly'],
+            'samesite' => $params['samesite'] ?? 'Lax',
+        ]);
+
         $_SESSION = [];
         session_destroy();
         header('Location: ?page=login');

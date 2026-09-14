@@ -29,7 +29,7 @@
                 <h1 class="profile__name">Martin Fernandez</h1>
                 <a class="profile__email anchor-not-style" href="mailto:martin.fernandez@nuva.com">martin.fernandez@nuva.com</a>
             </div>
-            <data class="profile__id" value="000001">
+            <data class="profile__id nuva-badge" value="000001">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" width="14" height="14"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5Z"/></svg>
                 ID · #000001
             </data>

@@ -1,25 +1,30 @@
-.tab-bar{
+.tab-bar {
     position: fixed;
     left: 0;
     right: 0;
     bottom: 0;
     z-index: 10;
-    padding: 1.8rem 1.8rem .3rem;
     border-top: .1rem var(--border) solid;
     box-sizing: border-box;
     background-color: var(--bg-secondary);
 }
 
-.tab-bar__list{
+.tab-bar__content {
+    padding: 1.8rem 1.8rem .3rem;
+}
+
+.tab-bar__list {
     display: flex;
     justify-content: space-around;
     align-items: center;
     list-style: none;
     width: 100%;
     gap: 1rem;
+    margin: 0;
+    padding: 0;
 }
 
-.tab-bar__link{
+.tab-bar__link {
     position: relative;
     display: flex;
     flex-direction: column;
@@ -29,7 +34,7 @@
     padding-bottom: .6rem;
 }
 
-.tab-bar__link::after{
+.tab-bar__link::after {
     content: "";
     position: absolute;
     bottom: 0;
@@ -39,36 +44,76 @@
     border-radius: .2rem;
 }
 
-.tab-bar__link.is-active::after{
+.tab-bar__link.is-active::after {
     width: 75%;
 }
 
-.tab-bar__icon-container i{
-    font-size: 1.8rem;
+.tab-bar__icon {
+    width: 1.8rem;
+    height: 1.8rem;
 }
 
-.tab-bar__text, .tab-bar__icon{
+.tab-bar__text,
+.tab-bar__icon {
     color: var(--text-alternative);
 }
 
 .tab-bar__link.is-active {
-  color: var(--primary);
+    color: var(--primary);
 }
 
 .tab-bar__link.is-active .tab-bar__icon {
-  color: var(--primary);
+    color: var(--primary);
 }
 
 .tab-bar__link.is-active .tab-bar__text {
-  color: var(--primary);
+    color: var(--primary);
 }
 
-.tab-bar {
-    position: fixed;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    height: var(--tabbar-height);
-    z-index: 10;
-    background-color: var(--bg-secondary);
+@media (min-width: 701px) {
+    .tab-bar {
+        top: 6.2rem;
+        right: auto;
+        bottom: 0;
+        width: 18rem;
+        border-top: 0;
+        border-right: .1rem var(--border) solid;
+    }
+
+    .tab-bar__content {
+        padding: 1.8rem .8rem;
+    }
+
+    .tab-bar__list {
+        flex-direction: column;
+        align-items: stretch;
+        gap: .4rem;
+    }
+
+    .tab-bar__link {
+        flex-direction: row;
+        justify-content: flex-start;
+        gap: 1.2rem;
+        min-height: 4rem;
+        padding: 0 1.2rem;
+        border-radius: .4rem;
+    }
+
+    .tab-bar__link::after {
+        top: 0;
+        left: 0;
+        bottom: auto;
+        width: .3rem;
+        height: 0;
+        border-radius: 0 .2rem .2rem 0;
+    }
+
+    .tab-bar__link.is-active {
+        background-color: var(--control-bg);
+    }
+
+    .tab-bar__link.is-active::after {
+        width: .3rem;
+        height: 100%;
+    }
 }

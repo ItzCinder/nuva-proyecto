@@ -3,7 +3,7 @@
 $pageParam = $_GET['page'] ?? 'index';
 $activePage = is_string($pageParam) ? $pageParam : 'index';
 ?>
-<nav class="tab-bar">
+<div class="tab-bar__content">
     <ul class="tab-bar__list">
         <li class="tab-bar__item">
             <!-- Marcamos como activo si es 'index' o 'account' -->
@@ -27,4 +27,4 @@ $activePage = is_string($pageParam) ? $pageParam : 'index';
             </a>
         </li>
     </ul>
-</nav>
+</div>

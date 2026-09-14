@@ -8,6 +8,10 @@
     display: flex;
     justify-content: space-between;
     border-bottom: .1rem var(--border) solid;
+    min-height: 6.2rem;
+    box-sizing: border-box;
+    position: relative;
+    z-index: 11;
 }
 
 .header__btn{

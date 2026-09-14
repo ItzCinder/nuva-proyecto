@@ -4,7 +4,6 @@ namespace app\Models;
 
 class User extends Model {
     private ?int $id;
-    private ?int $roleId;
     private ?string $googleId;
     private string $email;
     private string $name;
@@ -14,7 +13,6 @@ class User extends Model {
     public function __construct(
         string $email,
         string $name,
-        ?int $roleId = null,
         ?string $googleId = null,
         ?string $pictureUrl = null,
         ?int $id = null,
@@ -22,7 +20,6 @@ class User extends Model {
     ) {
         parent::__construct();
         $this->id = $id;
-        $this->roleId = $roleId;
         $this->googleId = $googleId;
         $this->email = $email;
         $this->name = $name;
@@ -43,16 +40,7 @@ class User extends Model {
         return $this;
     }
 
-    public function getRoleId(): ?int
-    {
-        return $this->roleId;
-    }
 
-    public function setRoleId(?int $roleId): self
-    {
-        $this->roleId = $roleId;
-        return $this;
-    }
 
     public function getGoogleId(): ?string
     {
@@ -126,8 +114,8 @@ class User extends Model {
 
     private function insert(): bool
     {
-        $sql = "INSERT INTO users (email, name, google_id, picture_url, role_id, created_at) 
-                VALUES (:email, :name, :google_id, :picture_url, :role_id, :created_at)";
+        $sql = "INSERT INTO users (email, name, google_id, picture_url, created_at) 
+                VALUES (:email, :name, :google_id, :picture_url,  :created_at)";
         
         $stmt = $this->db->prepare($sql);
         $result = $stmt->execute([
@@ -135,7 +123,6 @@ class User extends Model {
             ':name'          => $this->name,
             ':google_id'     => $this->googleId,
             ':picture_url'   => $this->pictureUrl,
-            ':role_id'       => $this->roleId,
             ':created_at'    => $this->createdAt ?? date('Y-m-d H:i:s'),
         ]);
 
@@ -149,7 +136,7 @@ class User extends Model {
     private function update(): bool
     {
         $sql = "UPDATE users SET email = :email, name = :name, google_id = :google_id, 
-                picture_url = :picture_url, role_id = :role_id WHERE id = :id";
+                picture_url = :picture_url WHERE id = :id";
         
         $stmt = $this->db->prepare($sql);
         return $stmt->execute([
@@ -157,7 +144,6 @@ class User extends Model {
             ':name'        => $this->name,
             ':google_id'   => $this->googleId,
             ':picture_url' => $this->pictureUrl,
-            ':role_id'     => $this->roleId,
             ':id'          => $this->id,
         ]);
     }
@@ -180,7 +166,6 @@ class User extends Model {
         return new self(
             $row['email'],
             $row['name'],
-            $row['role_id'],
             $row['google_id'],
             $row['picture_url'],
             $row['id'],
@@ -206,7 +191,6 @@ class User extends Model {
         return new self(
             $row['email'],
             $row['name'],
-            $row['role_id'],
             $row['google_id'],
             $row['picture_url'],
             $row['id'],
@@ -232,7 +216,6 @@ class User extends Model {
         return new self(
             $row['email'],
             $row['name'],
-            $row['role_id'],
             $row['google_id'],
             $row['picture_url'],
             $row['id'],

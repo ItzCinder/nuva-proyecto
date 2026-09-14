@@ -18,3 +18,14 @@
     border: 3px solid var(--primary);
 }
 
+.profile__id{
+    gap: .5rem;
+    padding: .5rem .8rem;
+    font-size: 1.1rem;
+}
+
+.profile__id svg{
+    width: 1.4rem;
+    height: 1.4rem;
+}
+
