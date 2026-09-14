@@ -113,7 +113,7 @@
             <div>
                 <div>
                 <article class="card stats__card nuva-card">
-                    <div class="card-body text-center">
+                    <div class="card-body text-center d-flex flex-column justify-content-center">
                         <h3 class="stats__qty mb-1">12K+</h3>
                         <span>Jugadores</span>
                     </div>
@@ -122,7 +122,7 @@
 
             <div>
                 <article class="card stats__card nuva-card">
-                    <div class="card-body text-center">
+                    <div class="card-body text-center d-flex flex-column justify-content-center">
                         <h3 class="stats__qty mb-1">450+</h3>
                         <span>Entornos</span>
                     </div>
@@ -130,7 +130,7 @@
             </div>
             <div>
                 <article class="card stats__card nuva-card">
-                    <div class="card-body text-center">
+                    <div class="card-body text-center d-flex flex-column justify-content-center">
                         <h3 class="stats__qty mb-1">2.5K+</h3>
                         <span>Torneos Jugados</span>
                     </div>
@@ -143,7 +143,7 @@
         <section class="landing-cta-box">
             <h2 class="">¿Listo para unirte al juego?</h2>
             <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Temporibus animi similique accusamus, sapiente, eum delectus, earum excepturi dolore pariatur error neque blanditiis ea sequi. Dolore porro modi neque aspernatur eos.</p>
-            <a href="#">Crear mi Cuenta Gratis</a>
+            <a href="?page=google-login">Crear mi Cuenta Gratis</a>
         </section>
 
         
