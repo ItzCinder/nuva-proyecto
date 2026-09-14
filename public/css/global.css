@@ -65,12 +65,14 @@ body{
 }
 
 .main{
-    flex: 1;
+    flex: 1 1 auto;
     min-height: 0;
     min-width: 0;
+    width: 100%;
     padding: 0 2.5rem;
     margin: 2rem 0;
     padding-bottom: 2rem;
+    box-sizing: border-box;
     overflow-y: auto;
     overflow-x: hidden;
 }
@@ -153,6 +155,7 @@ body{
     }
 
     .main{
+        width: calc(100% - 18rem);
         margin-left: 18rem;
     }
 }

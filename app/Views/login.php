@@ -19,20 +19,22 @@
         <?php require __DIR__ . '/components/header.php'; ?>
     </header>
 
-    <main class="main">
+    <main class="main d-flex flex-column gap-4">
         <div class="login__container">
             <div class="login__logo-container">
                 <img class="login__logo-nuva" src="/public/assets/logo/icon-main.svg" alt="Nuva">
                 <img class="login__logo-nuva__wordmark" src="/public/assets/logo/wordmark-main-on-light.svg" alt="Nuva">
             </div>
             <span>Inicia sesión para gestionar tu perfil y competiciones.</span>
-            <img class="login__google-test" src="/public/assets/test.png" alt="">
         </div>
-        <a href="/public/index.php?page=google-login">
-            Continuar con Google
+        <a class="login__google-btn" href="/public/index.php?page=google-login">
+            <img class="login__google-icon" src="/public/assets/logo/google_logo.svg" alt="">
+            <span>Continuar con Google</span>
         </a>
     </main>
 
-    <?php require __DIR__ . '/components/tabbar.php'; ?>
+    <nav class="tab-bar">
+        <?php require __DIR__ . '/components/tabbar.php'; ?>
+    </nav>
 </body>
 </html>
