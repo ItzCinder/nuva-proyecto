@@ -21,7 +21,7 @@ $activePage = is_string($pageParam) ? $pageParam : 'index';
         </li>
 
         <li class="tab-bar__item">
-            <a class="tab-bar__link <?= $activePage === 'profile' ? 'is-active' : '' ?>" href="?page=profile">
+            <a class="tab-bar__link <?= in_array($activePage, ['profile', 'login']) ? 'is-active' : '' ?>" href="?page=profile">
                 <i class="tab-bar__icon" data-lucide="user"></i>
                 <span class="tab-bar__text">Cuenta</span>
             </a>
