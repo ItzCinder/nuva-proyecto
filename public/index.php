@@ -145,9 +145,6 @@ switch ($page) {
         ]);
         break;
 
-        /*
-        Para pruebas, recibir la llamada de Google Auth.
-        */
     case 'google-callback':
         require_once dirname(__DIR__) . '/vendor/autoload.php';
         require_once dirname(__DIR__) . '/app/Services/Database.php';
@@ -155,74 +152,25 @@ switch ($page) {
         require_once dirname(__DIR__) . '/app/Services/UserService.php';
         require_once dirname(__DIR__) . '/app/Models/Model.php';
         require_once dirname(__DIR__) . '/app/Models/User.php';
+        require_once dirname(__DIR__) . '/app/Controllers/GoogleAuthController.php';
 
-        if (empty($_GET['error'])) {
-            $state = $_GET['state'] ?? null;
-            $sessionState = $_SESSION['oauth2state'] ?? null;
-
-            if (!is_string($state) || !is_string($sessionState) || !hash_equals($sessionState, $state)) {
-                unset($_SESSION['oauth2state']);
-                http_response_code(400);
-                echo 'Estado OAuth inválido';
-                exit;
-            }
-        }
-
-        if (!empty($_GET['error'])) {
-            unset($_SESSION['oauth2state']);
-            header('Location: ?page=login');
-            exit;
-        }
-
-        if (empty($_GET['code']) || !is_string($_GET['code'])) {
-            http_response_code(400);
-            echo 'Código de autorización no encontrado';
-            exit;
-        }
-
-        $service = new \App\Services\GoogleAuthService();
-        $userInfo = $service->getUserInfoFromCode($_GET['code']);
-
-        if (empty($userInfo['google_id']) || empty($userInfo['email'])) {
-            http_response_code(502);
-            echo 'Google no devolvió los datos necesarios del usuario';
-            exit;
-        }
-
-        /*
-        Guardar usuario en la base de datos
-        */
-        try {
-            $userService = new \App\Services\UserService();
-            $user = $userService->findOrCreateFromGoogle($userInfo);
-        } catch (Throwable $exception) {
-            http_response_code(500);
-            echo 'No se pudo guardar el usuario';
-            exit;
-        }
-
-        unset($_SESSION['oauth2state']);
-        session_regenerate_id(true);
-        $_SESSION['authenticated'] = true;
-        $_SESSION['user_id'] = $user->getId();
-
-        header('Location: ?page=index');
-        exit;
+        $controller = new \App\Controllers\GoogleAuthController();
+        $controller->callback();
+        break;
 
         /*
         Enrutamiento para loguearte con Google.
         */
     case 'google-login':
+        require_once dirname(__DIR__) . '/vendor/autoload.php';
+        require_once dirname(__DIR__) . '/app/Services/GoogleAuthService.php';
+        require_once dirname(__DIR__) . '/app/Controllers/GoogleAuthController.php';
+
         if (!$isAuthenticated()) {
-            require_once dirname(__DIR__) . '/vendor/autoload.php';
-            require_once dirname(__DIR__) . '/app/Services/GoogleAuthService.php';
-            
-
-            $service = new \App\Services\GoogleAuthService();
-
-            header('Location: ' . $service->getAuthUrl());
-            exit;  
+            $controller = new \App\Controllers\GoogleAuthController();
+            $controller->login();
         }
+
         $render('account/profile');
         break;
         
