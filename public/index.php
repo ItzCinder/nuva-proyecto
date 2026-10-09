@@ -107,6 +107,29 @@ switch ($page) {
         $render('public/competitions');
         break;
 
+    case 'competitions-all':
+        $render('public/competitions', [
+            'collectionType' => 'competitions',
+            'collectionPage' => 'competitions-all',
+            'collectionAll' => true,
+            'collectionTitle' => 'Todas las competiciones',
+        ]);
+        break;
+
+    case 'my-tournaments':
+    case 'my-environments':
+        if (!$isAuthenticated()) {
+            $render('login');
+            break;
+        }
+        $render('public/competitions', [
+            'collectionType' => $page === 'my-tournaments' ? 'tournaments' : 'environments',
+            'collectionPage' => $page,
+            'collectionAll' => true,
+            'collectionTitle' => $page === 'my-tournaments' ? 'Mis torneos' : 'Mis entornos',
+        ]);
+        break;
+
     case 'account':
         $render('account/home');
         break;

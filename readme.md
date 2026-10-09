@@ -44,3 +44,11 @@ La aplicación descarga la foto de Google y guarda en la base de datos únicamen
 - Si cambias el dominio o la ruta del proyecto, actualiza `GOOGLE_REDIRECT_URI`.
 - El archivo `.env` y las fotos subidas no deben versionarse.
 - La sesión guarda el `user_id`; los datos del perfil se consultan desde la tabla `users`.
+
+## Listados de la interfaz
+
+- Competiciones muestra hasta tres tarjetas; `?page=competitions-all` abre el listado completo y conserva los filtros.
+- En Cuenta, las pestañas Mis torneos y Mis entornos incluyen filtros y enlaces a `?page=my-tournaments` y `?page=my-environments`. Estos listados requieren sesión.
+- Los filtros se envían por GET y funcionan sin JavaScript. Permiten buscar por nombre o deporte y combinar deporte, estado y formato; los entornos tienen búsqueda por nombre.
+- Las tarjetas actuales siguen siendo datos de demostración, centralizados en `app/Views/components/collection-data.php`. Mis entornos permanece vacío, sin una vista interna ni gestión de entornos.
+- `collection.php`, `collection-tabs.php` y `competition-card.php` reutilizan los listados y tarjetas dentro de la estructura PHP existente.

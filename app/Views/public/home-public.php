@@ -6,14 +6,14 @@
     <script src="https://unpkg.com/lucide@latest"></script>
     <link href="/public/css/bootstrap.min.css" rel="stylesheet">
     <script src="/public/js/bootstrap.bundle.min.js" defer></script>
-    <link rel="stylesheet" href="/public/css/global.css">
-    <link rel="stylesheet" href="/public/css/components/header.css">
-    <link rel="stylesheet" href="/public/css/components/tabbar.css">
+    <link rel="stylesheet" href="/public/css/global.css?v=2">
+    <link rel="stylesheet" href="/public/css/components/header.css?v=2">
+    <link rel="stylesheet" href="/public/css/components/tabbar.css?v=2">
     <link rel="stylesheet" href="/public/css/public/home-public.css">
     <script src="/public/js/layout.js" defer></script>
     <title>Nuva - Home Public</title>
 </head>
-<body>
+<body class="page-public">
     <!-- Header inyectado mediante -->
     <header class="header">
         <?php require __DIR__ . '/../components/header.php'; ?>
@@ -146,6 +146,6 @@
             <a href="?page=google-login">Crear mi Cuenta Gratis</a>
         </section>
 
-        
+    </main>
 </body>
 </html>

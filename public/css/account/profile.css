@@ -1,4 +1,8 @@
 .profile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.6rem;
     position: relative;
     width: min(100%, 96rem);
     margin-right: auto;
@@ -20,11 +24,14 @@
 .profile__email {
     font-size: 1.3rem;
     color: var(--text-alternative);
+    overflow-wrap: anywhere;
 }
 
+.profile__info { min-width: 0; max-width: 100%; text-align: center; }
+
 .profile__avatar {
-    width: 16rem;
-    height: 16rem;
+    width: 12rem;
+    height: 12rem;
     display: block;
     object-fit: cover;
 }
@@ -51,12 +58,7 @@
     height: 1.4rem;
 }
 
-@media (min-width: 701px) {
-    .main {
-        padding-right: 6rem;
-        padding-left: 6rem;
-    }
-
+@media (min-width: 768px) {
     .profile {
         display: grid;
         grid-template-columns: auto minmax(0, 1fr);
@@ -76,13 +78,6 @@
         width: min(100%, 112rem);
         margin-right: auto;
         margin-left: auto;
-    }
-
-    .main .comp__section {
-        display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        grid-template-rows: repeat(2, auto);
-        gap: 1.6rem;
     }
 
     .profile__info {

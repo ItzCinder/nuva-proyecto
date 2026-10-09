@@ -66,6 +66,7 @@
     flex-direction: row;
     gap: 1rem;
     justify-content: space-evenly;
+    flex-wrap: wrap;
 }
 
 .modules__card{
@@ -73,8 +74,14 @@
     gap: 1.5rem;
     flex-direction: column;
     align-items: center;
-    width: 12rem;
+    flex: 1 1 12rem;
     padding: 2rem 1rem;
+}
+
+.hero__text { font-size: 1.4rem; line-height: 1.7; color: var(--text-alternative); }
+.hero__title { width: 100%; }
+@media (min-width: 992px) {
+    .main > section { width: min(100%, 112rem); margin-inline: auto; }
 }
 
 .modules__icon{

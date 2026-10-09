@@ -1,7 +1,7 @@
 
 .comp__section{
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 34rem), 1fr));
     gap: 1.2rem;
     margin-top: 1rem;
 }
@@ -42,6 +42,7 @@
 /* Contenido principal de la CARD */
 .comp__card-content{
     flex: 1;
+    min-width: 0;
     display: flex;
     flex-direction: column;
     gap: .6rem;
@@ -51,16 +52,18 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    flex-wrap: wrap;
+    gap: .8rem;
 }
 .comp__card-sport-tag{
   padding: .2rem .6rem;
-  font-size: .7rem;
+  font-size: 1rem;
 }
 
 .comp__card-status{
     display: flex;
     align-items: center;
-    font-size: .8rem;
+    font-size: 1.2rem;
     color: var(--green);
     font-weight: 500;
 }
@@ -81,15 +84,17 @@
   font-weight: 700;
   color: var(--text);
   margin: 2px 0 0 0;
+  overflow-wrap: anywhere;
 }
 
 /* Filass d los metadatos */
 .comp__card-meta {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 10px;
   color: var(--text-alternative);
-  font-size: 0.82rem;
+  font-size: 1.2rem;
 }
 
 .comp__card-item {
@@ -102,6 +107,14 @@
   width: 15px;
   height: 15px;
   object-fit: contain;
+  flex-shrink: 0;
+}
+
+@media (max-width: 575px) {
+  .comp__card { padding: 1.4rem; gap: 1.2rem; align-items: flex-start; }
+  .comp__card-logo { width: 4.6rem; height: 4.6rem; border-radius: 1rem; }
+  .comp__card-logo .comp__card-icon { width: 2.6rem; height: 2.6rem; }
+  .comp__card-title { font-size: 1.6rem; }
 }
 
 /* Flecha Derecha */

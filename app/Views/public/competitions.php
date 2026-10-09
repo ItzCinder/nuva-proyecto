@@ -1,17 +1,18 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://unpkg.com/lucide@latest"></script>
     <link href="/public/css/bootstrap.min.css" rel="stylesheet">
     <script src="/public/js/bootstrap.bundle.min.js" defer></script>
-    <link rel="stylesheet" href="/public/css/global.css">
-    <link rel="stylesheet" href="/public/css/components/header.css">
-    <link rel="stylesheet" href="/public/css/components/tabbar.css">
-    <link rel="stylesheet" href="/public/css/public/competitions.css">
+    <link rel="stylesheet" href="/public/css/global.css?v=2">
+    <link rel="stylesheet" href="/public/css/components/header.css?v=2">
+    <link rel="stylesheet" href="/public/css/components/tabbar.css?v=2">
+    <link rel="stylesheet" href="/public/css/public/competitions.css?v=2">
+    <link rel="stylesheet" href="/public/css/components/collection.css">
     <script src="/public/js/layout.js" defer></script>
-    <title>Nuva - Cuenta</title>
+    <title>Nuva - <?= htmlspecialchars($collectionTitle ?? 'Competiciones', ENT_QUOTES, 'UTF-8') ?></title>
 </head>
 <body>
     <!-- Header inyectado mediante fetch -->
@@ -19,145 +20,11 @@
         <?php require __DIR__ . '/../components/header.php'; ?>
     </header>
     <main class="main">
-        <article class="comp">
-            <div class="d-flex justify-content-between align-items-center">
-                <h3 class="comp__title section-title">Competiciones activas</h3>
-                <a class="nuva-anchor" href="#">Ver todo</a>
-            </div>
-            <section class="comp__section">
-                <div class="comp__card nuva-card">
-                    <div class="comp__card-logo">
-                        <i class="comp__card-icon" data-lucide="volleyball"></i>
-                    </div>
-                    <div class="comp__card-content">
-                        <div class="comp__card-header">
-                            <span class="comp__card-sport-tag nuva-badge">Futbol</span>
-                            <div class="comp__card-status">
-                                <span class="comp__card-status-dot"> En curso</span>
-                            </div>
-                        </div>
-                        <h3 class="comp__card-title">Liga ITS 2026</h3>
-                        <div class="comp__card-meta">
-                            <div class="comp__card-item">
-                                <i class="comp__card-icon" data-lucide="users"></i>
-                                <span>24 Jugadores</span>
-                            </div>
-                            <span>|</span>
-                            <div class="comp__card-item">
-                                <i class="comp__card-icon" data-lucide="trophy"></i>
-                                <span>Liga</span>
-                            </div>
-                        </div>
-                        <div class="comp__card-meta">
-                            <div class="comp__card-item">
-                                <i class="comp__card-icon" data-lucide="calendar-days"></i>
-                                <span>12 Mar - 28 Jun</span>
-                            </div>
-                        </div>
-                    </div>
-                    <i class="comp__card-icon" data-lucide="arrow-right"></i>
-                </div>
-
-                <!-- DATOS DE DEMOSTRACIÓN-->
-                 <!-- LA IDEA ES QUE NO SE MUESTRE MAS DE 3 O 4 COMPETICIONES Y TENGAS QUE DARLE A VER TODO PARA VER LAS DEMÁS + USAR LOS FILTROS DE BUSQUEDA QUE SE AÑADIRAN EN ESA SECCIÓN-->
-                 <div class="comp__card nuva-card">
-                    <div class="comp__card-logo">
-                        <i class="comp__card-icon" data-lucide="volleyball"></i>
-                    </div>
-                    <div class="comp__card-content">
-                        <div class="comp__card-header">
-                            <span class="comp__card-sport-tag nuva-badge">Basquetbol</span>
-                            <div class="comp__card-status">
-                                <span class="comp__card-status-dot"> En curso</span>
-                            </div>
-                        </div>
-                        <h3 class="comp__card-title">Liga Bassktel 2026</h3>
-                        <div class="comp__card-meta">
-                            <div class="comp__card-item">
-                                <i class="comp__card-icon" data-lucide="users"></i>
-                                <span>24 Jugadores</span>
-                            </div>
-                            <span>|</span>
-                            <div class="comp__card-item">
-                                <i class="comp__card-icon" data-lucide="trophy"></i>
-                                <span>Liga</span>
-                            </div>
-                        </div>
-                        <div class="comp__card-meta">
-                            <div class="comp__card-item">
-                                <i class="comp__card-icon" data-lucide="calendar-days"></i>
-                                <span>12 Mar - 28 Jun</span>
-                            </div>
-                        </div>
-                    </div>
-                    <i class="comp__card-icon" data-lucide="arrow-right"></i>
-                </div>
-                <div class="comp__card nuva-card">
-                    <div class="comp__card-logo">
-                        <i class="comp__card-icon" data-lucide="volleyball"></i>
-                    </div>
-                    <div class="comp__card-content">
-                        <div class="comp__card-header">
-                            <span class="comp__card-sport-tag nuva-badge">Ajedrez</span>
-                            <div class="comp__card-status">
-                                <span class="comp__card-status-dot"> En curso</span>
-                            </div>
-                        </div>
-                        <h3 class="comp__card-title">Torneo Ajederez 2026</h3>
-                        <div class="comp__card-meta">
-                            <div class="comp__card-item">
-                                <i class="comp__card-icon" data-lucide="users"></i>
-                                <span>16 Jugadores</span>
-                            </div>
-                            <span>|</span>
-                            <div class="comp__card-item">
-                                <i class="comp__card-icon" data-lucide="trophy"></i>
-                                <span>Sistema Suizo</span>
-                            </div>
-                        </div>
-                        <div class="comp__card-meta">
-                            <div class="comp__card-item">
-                                <i class="comp__card-icon" data-lucide="calendar-days"></i>
-                                <span>12 Mar - 12 Sep</span>
-                            </div>
-                        </div>
-                    </div>
-                    <i class="comp__card-icon" data-lucide="arrow-right"></i>
-                </div>
-                <div class="comp__card nuva-card">
-                    <div class="comp__card-logo">
-                        <i class="comp__card-icon" data-lucide="volleyball"></i>
-                    </div>
-                    <div class="comp__card-content">
-                        <div class="comp__card-header">
-                            <span class="comp__card-sport-tag nuva-badge">Futbol</span>
-                            <div class="comp__card-status">
-                                <span class="comp__card-status-dot"> En curso</span>
-                            </div>
-                        </div>
-                        <h3 class="comp__card-title">Liga ITS 2026</h3>
-                        <div class="comp__card-meta">
-                            <div class="comp__card-item">
-                                <i class="comp__card-icon" data-lucide="users"></i>
-                                <span>24 Jugadores</span>
-                            </div>
-                            <span>|</span>
-                            <div class="comp__card-item">
-                                <i class="comp__card-icon" data-lucide="trophy"></i>
-                                <span>Liga</span>
-                            </div>
-                        </div>
-                        <div class="comp__card-meta">
-                            <div class="comp__card-item">
-                                <i class="comp__card-icon" data-lucide="calendar-days"></i>
-                                <span>12 Mar - 28 Jun</span>
-                            </div>
-                        </div>
-                    </div>
-                    <i class="comp__card-icon" data-lucide="arrow-right"></i>
-                </div>
-            </section>
-        </article>
+        <?php
+        $collectionType = $collectionType ?? 'competitions';
+        $collectionPage = $collectionPage ?? 'competitions';
+        require __DIR__ . '/../components/collection.php';
+        ?>
     </main>
 
     <!-- Navbar (tabbar) inyectado mediante fetch -->

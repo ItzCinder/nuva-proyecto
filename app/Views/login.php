@@ -7,9 +7,9 @@
     <link href="/public/css/bootstrap.min.css" rel="stylesheet">
     <script src="/public/js/bootstrap.bundle.min.js" defer></script>
     <script src="/public/js/layout.js" defer></script>
-    <link rel="stylesheet" href="/public/css/global.css">
-    <link rel="stylesheet" href="/public/css/components/header.css">
-    <link rel="stylesheet" href="/public/css/components/tabbar.css">
+    <link rel="stylesheet" href="/public/css/global.css?v=2">
+    <link rel="stylesheet" href="/public/css/components/header.css?v=2">
+    <link rel="stylesheet" href="/public/css/components/tabbar.css?v=2">
     <link rel="stylesheet" href="/public/css/account.css">
     
     <title>Nuva - Iniciar sesión</title>

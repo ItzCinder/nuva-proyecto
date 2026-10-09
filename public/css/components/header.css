@@ -4,11 +4,13 @@
 
 .header{
     background-color: var(--bg-secondary);
-    padding: 1rem;
+    padding: 1.2rem 2rem;
     display: flex;
     justify-content: space-between;
     border-bottom: .1rem var(--border) solid;
-    min-height: 6.2rem;
+    min-height: var(--header-height);
+    flex-shrink: 0;
+    align-items: center;
     box-sizing: border-box;
     position: relative;
     z-index: 11;

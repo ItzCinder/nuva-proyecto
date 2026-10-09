@@ -40,6 +40,8 @@
     --accent-transparent: rgba(224, 68, 24, 0);
 
     --tabbar-height: 7rem;
+    --sidebar-width: 24rem;
+    --header-height: 7.2rem;
 }
 
 /* Configuracion inical global de css GLOBAL */
@@ -47,6 +49,7 @@
 html{
     font-size: 10px;
     background: var(--bg);
+    color-scheme: dark;
 }
 
 body{
@@ -57,7 +60,8 @@ body{
     display: flex;
     flex-direction: column;
     overflow: hidden;
-    padding-bottom: var(--tabbar-height);
+    padding-bottom: calc(var(--tabbar-height) + env(safe-area-inset-bottom));
+    font-size: 1.4rem;
 }
 
 .anchor-not-style{
@@ -69,7 +73,7 @@ body{
     min-height: 0;
     min-width: 0;
     width: 100%;
-    padding: 0 2.5rem;
+    padding: 0 clamp(1.6rem, 3vw, 4rem);
     margin: 2rem 0;
     padding-bottom: 2rem;
     box-sizing: border-box;
@@ -79,7 +83,7 @@ body{
 
 .nuva-anchor {
     color: var(--primary);
-    font-size: 1rem;
+    font-size: 1.3rem;
     font-weight: 600;
 }
 
@@ -91,7 +95,7 @@ body{
 }
 
 .section-title{
-    font-size: 1.7rem;
+    font-size: 1.9rem;
     font-weight:800;
     color: var(--text);
 
@@ -148,14 +152,23 @@ body{
     border-radius: 1.2rem;
 }
 
-@media (min-width: 701px){
+:where(a, button, input, select, summary):focus-visible {
+    outline: .2rem solid var(--primary);
+    outline-offset: .4rem;
+}
+
+@media (min-width: 992px){
     body{
         padding-bottom: 0;
         padding-left: 0;
     }
 
     .main{
-        width: calc(100% - 18rem);
-        margin-left: 18rem;
+        width: calc(100% - var(--sidebar-width));
+        margin-left: var(--sidebar-width);
     }
 }
+
+/* La portada pública no incluye navegación lateral. */
+body.page-public { padding-bottom: 0; }
+.page-public .main { width: 100%; margin-left: 0; }
