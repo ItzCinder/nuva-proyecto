@@ -1,76 +1,98 @@
+<?php
+$escape = static fn ($value): string => htmlspecialchars((string)$value, ENT_QUOTES, 'UTF-8');
+$publicTournaments = $publicTournaments ?? [];
+$myTournaments = $myTournaments ?? [];
+$myEnvironments = $myEnvironments ?? [];
+$categoryLabels = ['tradicional' => 'Deporte tradicional', 'mental' => 'Deporte mental', 'esports' => 'eSports', 'otros' => 'Otros'];
+$categoryIcons = ['tradicional' => 'volleyball', 'mental' => 'chess-king', 'esports' => 'gamepad-2', 'otros' => 'shapes'];
+$categoryCounts = array_fill_keys(array_keys($categoryLabels), 0);
+foreach ($publicTournaments as $tournament) {
+    if (isset($categoryCounts[$tournament['discipline_category']])) $categoryCounts[$tournament['discipline_category']]++;
+}
+$featured = array_values(array_filter($publicTournaments, static fn ($t) => $t['status'] !== 'Finalizado'));
+usort($featured, static function ($a, $b) {
+    $aActive = $a['status'] === 'En curso' ? 0 : 1;
+    $bActive = $b['status'] === 'En curso' ? 0 : 1;
+    return ($aActive <=> $bActive) ?: strcmp($aActive ? $a['start_date'] : $a['end_date'], $bActive ? $b['start_date'] : $b['end_date']);
+});
+$featured = array_slice($featured, 0, 3);
+$localDate = static fn ($value): string => (new DateTimeImmutable($value, new DateTimeZone('UTC')))->setTimezone(new DateTimeZone('America/Montevideo'))->format('d/m/Y');
+?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://unpkg.com/lucide@latest"></script>
     <link href="/public/css/bootstrap.min.css" rel="stylesheet">
-    <script src="/public/js/bootstrap.bundle.min.js"></script>
-    <link rel="stylesheet" href="/public/css/global.css?v=2">
-    <link rel="stylesheet" href="/public/css/components/header.css?v=2">
-    <link rel="stylesheet" href="/public/css/components/tabbar.css?v=2">
-    <link rel="stylesheet" href="/public/css/index.css?v=2">
+    <script src="/public/js/bootstrap.bundle.min.js" defer></script>
+    <link rel="stylesheet" href="/public/css/global.css?v=3">
+    <link rel="stylesheet" href="/public/css/components/header.css?v=4">
+    <link rel="stylesheet" href="/public/css/components/tabbar.css?v=4">
+    <link rel="stylesheet" href="/public/css/index.css?v=4">
     <script src="/public/js/layout.js" defer></script>
     <title>Nuva - Inicio</title>
 </head>
 <body>
-    <!-- Header inyectado mediante fetch -->
-    <header class="header">
-        <?php require __DIR__ . '/../components/header.php'; ?>
-    </header>
-    <!-- Contenido MAIN de Nuva - Donde va todo el contenido -->
-    <main class="main d-flex flex-column gap-4">
-        <section class="hero__container">
-            <h1 class="hero__title">Lorem ipsum dolor sit amet</h1>
-            <p class="hero__text">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Mollitia impedit minus voluptatem maxime minima autem, numquam commodi quod dolorum rem beatae itaque quos quo vel labore! Quia commodi voluptates vel.</p>
-            <a class="hero__btn nuva-btn" href="#">
-                Lorem ipsum dolor
-                <i class="hero__btn--icon" data-lucide="arrow-right"></i>
-            </a>
-        </section>
-        <section class="stats__container">
-            <div class="col-6">
-                <article class="card stats__card nuva-card">
-                    <div class="card-body text-center">
-                        <h3 class="stats__qty mb-1">12K+</h3>
-                        <span>Jugadores</span>
-                    </div>
-                </article>
+    <header class="header"><?php require __DIR__ . '/../components/header.php'; ?></header>
+    <main class="main home-main">
+        <section class="hero__container" aria-labelledby="home-title">
+            <span class="home-eyebrow">TU INICIO EN NUVA</span>
+            <h1 id="home-title" class="hero__title">Organiza y descubre competiciones</h1>
+            <p class="hero__text">Crea un entorno para tu comunidad, prepara torneos y explora los que ya están publicados. Todo comienza desde aquí.</p>
+            <div class="home-actions">
+                <a class="hero__btn nuva-btn" href="?page=guide">Conocer cómo funciona Nuva <i data-lucide="arrow-right" aria-hidden="true"></i></a>
+                <a class="home-link" href="?page=environment-create">Crear un entorno</a>
             </div>
+        </section>
 
-            <div class="col-6">
-                <article class="card stats__card nuva-card">
-                    <div class="card-body text-center">
-                        <h3 class="stats__qty mb-1">450+</h3>
-                        <span>Entornos</span>
-                    </div>
-                </article>
+        <?php if ($homeError ?? ''): ?><p class="home-notice" role="alert"><?= $escape($homeError) ?></p><?php endif; ?>
+
+        <section class="home-section" aria-labelledby="home-summary-title">
+            <div class="home-section__heading"><h2 id="home-summary-title" class="section-title">Tu actividad</h2><a class="nuva-anchor" href="?page=profile">Ir a mi cuenta →</a></div>
+            <div class="stats__container">
+                <a class="stats__card nuva-card" href="?page=my-environments"><span class="stats__qty"><?= count($myEnvironments) ?></span><span>Mis entornos</span><i data-lucide="arrow-up-right" aria-hidden="true"></i></a>
+                <a class="stats__card nuva-card" href="?page=my-tournaments"><span class="stats__qty"><?= count($myTournaments) ?></span><span>Mis torneos</span><i data-lucide="arrow-up-right" aria-hidden="true"></i></a>
+                <a class="stats__card nuva-card" href="?page=explore"><span class="stats__qty"><?= count($publicTournaments) ?></span><span>Torneos públicos</span><i data-lucide="arrow-up-right" aria-hidden="true"></i></a>
             </div>
         </section>
-        <section class="modules">
-            <div>
-                <h3 class="modules__title section-title">Explorar modulos</h3>
-            </div>
+
+        <section class="home-section modules" aria-labelledby="home-categories-title">
+            <div class="home-section__heading"><h2 id="home-categories-title" class="section-title">Explorar categorías</h2><a class="nuva-anchor" href="?page=explore">Ver todas →</a></div>
             <div class="modules__list">
-                <button class="modules__card nuva-card">
-                    <i class="modules__icon modules__icon--deporte-tradicional" data-lucide="volleyball"></i>
-                    <span class="modules__type">Deportes tradicionales</span>
-                </button>
-                <button class="modules__card nuva-card">
-                    <i class="modules__icon modules__icon--deporte-mental" data-lucide="chess-king"></i>
-                    <span class="modules__type">Deportes mentales</span>
-                </button>
-                <button class="modules__card nuva-card">
-                    <i class="modules__icon modules__icon--esports" data-lucide="gamepad-2"></i>
-                    <span class="modules__type">eSports</span>
-                </button>
-                
+                <?php foreach ($categoryLabels as $key => $label): ?>
+                    <a class="modules__card nuva-card" href="?page=explore&amp;category=<?= rawurlencode($label) ?>">
+                        <i class="modules__icon modules__icon--<?= $escape($key) ?>" data-lucide="<?= $escape($categoryIcons[$key]) ?>" aria-hidden="true"></i>
+                        <strong class="modules__type"><?= $escape($label) ?></strong>
+                        <span class="modules__count"><?= $categoryCounts[$key] ?> <?= $categoryCounts[$key] === 1 ? 'torneo público' : 'torneos públicos' ?></span>
+                    </a>
+                <?php endforeach; ?>
             </div>
+        </section>
+
+        <section class="home-section" aria-labelledby="home-featured-title">
+            <div class="home-section__heading"><div><h2 id="home-featured-title" class="section-title">En juego y próximos</h2><p class="home-muted">Torneos públicos que puedes explorar ahora.</p></div><a class="nuva-anchor" href="?page=explore">Explorar competiciones →</a></div>
+            <?php if ($featured): ?>
+                <div class="home-tournaments">
+                    <?php foreach ($featured as $t): ?>
+                        <a class="home-tournament nuva-card" href="?page=tournament&amp;id=<?= (int)$t['id'] ?>">
+                            <span class="home-tournament__top"><span class="nuva-badge"><?= $escape($t['discipline']) ?></span><span><?= $escape($t['status']) ?></span></span>
+                            <strong><?= $escape($t['name']) ?></strong>
+                            <span class="home-muted"><?= $escape($t['format_name']) ?> · <?= $escape($localDate($t['start_date'])) ?> – <?= $escape($localDate($t['end_date'])) ?></span>
+                            <span class="home-tournament__open">Abrir torneo <i data-lucide="arrow-right" aria-hidden="true"></i></span>
+                        </a>
+                    <?php endforeach; ?>
+                </div>
+            <?php else: ?>
+                <div class="home-empty nuva-card"><p>Por ahora no hay torneos públicos en juego o próximos.</p><a class="nuva-anchor" href="?page=explore">Ver todos los torneos →</a></div>
+            <?php endif; ?>
+        </section>
+
+        <section class="home-section home-start nuva-card" aria-labelledby="home-start-title">
+            <div><span class="home-eyebrow">PRIMEROS PASOS</span><h2 id="home-start-title" class="section-title">Prepara tu comunidad</h2><p class="home-muted">Un entorno reúne miembros, roles y torneos. Cuando lo tengas listo, podrás elegir el formato y publicar cada competición.</p></div>
+            <div class="home-start__links"><a class="nuva-btn" href="?page=environment-create">Crear entorno</a><a class="home-link" href="?page=guide#primeros-pasos">Leer la guía</a></div>
         </section>
     </main>
-    <!-- Navbar (tabbar) inyectado mediante fetch -->
-    <nav class="tab-bar">
-        <?php require __DIR__ . '/../components/tabbar.php'; ?>
-    </nav>
+    <nav class="tab-bar"><?php require __DIR__ . '/../components/tabbar.php'; ?></nav>
 </body>
 </html>

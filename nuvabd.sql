@@ -31,6 +31,13 @@ CREATE TABLE `tournament` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `workspace_id` INT NOT NULL,
   `organizer_id` INT,
+  `name` VARCHAR(120) NOT NULL,
+  `description` VARCHAR(500) NOT NULL DEFAULT '',
+  `discipline_category` VARCHAR(20) NOT NULL DEFAULT 'otros',
+  `discipline` VARCHAR(80) NOT NULL DEFAULT 'Otra disciplina',
+  `has_team` BOOLEAN NOT NULL DEFAULT 0,
+  `max_participants` SMALLINT UNSIGNED NOT NULL DEFAULT 16,
+  `published` BOOLEAN NOT NULL DEFAULT 0,
   `created_at` TIMESTAMP NOT NULL,
   `start_date` TIMESTAMP,
   `end_date` TIMESTAMP,
@@ -91,6 +98,7 @@ CREATE TABLE `tournament_members` (
   `tournament_id` INT NOT NULL,
   `member_id` INT NOT NULL,
   `role_id` INT NOT NULL,
+  `team_id` INT NULL,
   PRIMARY KEY (`id`),
   CONSTRAINT `fk_tournament_members_role_id_1` FOREIGN KEY (`role_id`) REFERENCES `roles` (`id`),
   CONSTRAINT `fk_tournament_members_tournament_id_2` FOREIGN KEY (`tournament_id`) REFERENCES `tournament` (`id`),
@@ -101,6 +109,10 @@ CREATE TABLE `tournament_members` (
 CREATE TABLE `tournament_config` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `module_id` INT NOT NULL,
+  `league_legs` TINYINT UNSIGNED NOT NULL DEFAULT 1,
+  `swiss_rounds` TINYINT UNSIGNED NULL,
+  `third_place` BOOLEAN NOT NULL DEFAULT 0,
+  `team_size` TINYINT UNSIGNED NULL,
   `updated_at` TIMESTAMP,
   PRIMARY KEY (`id`),
   CONSTRAINT `fk_tournament_config_module_id_1` FOREIGN KEY (`module_id`) REFERENCES `modules` (`id`),
@@ -115,6 +127,8 @@ CREATE TABLE `member_stat_types` (
   `name` VARCHAR(500) NOT NULL,
   `description` TEXT,
   `is_system_default` BOOLEAN NOT NULL,
+  `unit` VARCHAR(50) NULL COMMENT 'Unidad del dato; NULL cuando no corresponda (ej.: s, m, kg, %)',
+  `data_type` ENUM('integer', 'decimal') NOT NULL DEFAULT 'integer' COMMENT 'Tipo numerico admitido por la estadistica (RF-016)',
   `created_by` INT,
   `created_at` TIMESTAMP NOT NULL,
   PRIMARY KEY (`id`),
@@ -129,7 +143,7 @@ CREATE TABLE `member_stat_values` (
   `workspace_id` INT NOT NULL,
   `user_id` INT NOT NULL,
   `stat_type_id` INT NOT NULL,
-  `value` INT NOT NULL,
+  `value` DECIMAL(20,8) NOT NULL,
   `updated_at` TIMESTAMP,
   PRIMARY KEY (`id`),
   UNIQUE KEY `idx_member_stat_values_workspace_id_user_id_stat_type_id` (`workspace_id`, `user_id`, `stat_type_id`),
@@ -160,6 +174,7 @@ CREATE TABLE `workspace_audit_logs` (
 CREATE TABLE `tournament_teams` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `tournament_id` INT,
+  `name` VARCHAR(100) NOT NULL,
   `created_at` TIMESTAMP,
   PRIMARY KEY (`id`),
   CONSTRAINT `fk_tournament_teams_tournament_id_1` FOREIGN KEY (`tournament_id`) REFERENCES `tournament` (`id`)
@@ -172,7 +187,7 @@ CREATE TABLE `tournament_participant_stat_values` (
   `team_id` INT,
   `member_id` INT,
   `stat_type_id` INT NOT NULL,
-  `value` INT NOT NULL,
+  `value` DECIMAL(20,8) NOT NULL,
   `updated_at` TIMESTAMP,
   PRIMARY KEY (`id`),
   UNIQUE KEY `idx_tournament_participant_stat_values_id_tournament_te_dcc88df0` (`id_tournament`, `team_id`, `member_id`, `stat_type_id`),
@@ -236,3 +251,108 @@ CREATE TABLE `workspace_member_stat_config` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 SET FOREIGN_KEY_CHECKS=1;
+
+
+-- Roles y funciones de entornos. Puede ejecutarse nuevamente sin duplicar semillas.
+USE `NuvaBD`;
+
+CREATE TABLE IF NOT EXISTS `workspace_invitations` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `workspace_id` INT NOT NULL,
+  `token_hash` CHAR(64) NOT NULL,
+  `created_by` INT NOT NULL,
+  `created_at` DATETIME NOT NULL,
+  `revoked_at` DATETIME NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `idx_workspace_invitations_token_hash` (`token_hash`),
+  CONSTRAINT `fk_workspace_invitations_workspace` FOREIGN KEY (`workspace_id`) REFERENCES `workspaces` (`id`),
+  CONSTRAINT `fk_workspace_invitations_creator` FOREIGN KEY (`created_by`) REFERENCES `users` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+START TRANSACTION;
+INSERT INTO roles (name, description) SELECT 'Dueño', 'Crea el entorno y administra todos sus recursos. Asigna administradores generales.' WHERE NOT EXISTS (SELECT 1 FROM roles WHERE name = 'Dueño');
+INSERT INTO roles (name, description) SELECT 'Administrador General', 'Administra la información, miembros y módulos de su entorno.' WHERE NOT EXISTS (SELECT 1 FROM roles WHERE name = 'Administrador General');
+INSERT INTO roles (name, description) SELECT 'Organizador', 'Opera únicamente los torneos que tiene asignados en este entorno.' WHERE NOT EXISTS (SELECT 1 FROM roles WHERE name = 'Organizador');
+INSERT INTO roles (name, description) SELECT 'Participante', 'Consulta su entorno y los torneos en los que está inscrito.' WHERE NOT EXISTS (SELECT 1 FROM roles WHERE name = 'Participante');
+INSERT INTO permissions (name) SELECT 'environment.view' WHERE NOT EXISTS (SELECT 1 FROM permissions WHERE name = 'environment.view');
+INSERT INTO permissions (name) SELECT 'environment.edit' WHERE NOT EXISTS (SELECT 1 FROM permissions WHERE name = 'environment.edit');
+INSERT INTO permissions (name) SELECT 'members.manage' WHERE NOT EXISTS (SELECT 1 FROM permissions WHERE name = 'members.manage');
+INSERT INTO permissions (name) SELECT 'admins.manage' WHERE NOT EXISTS (SELECT 1 FROM permissions WHERE name = 'admins.manage');
+INSERT INTO permissions (name) SELECT 'modules.manage' WHERE NOT EXISTS (SELECT 1 FROM permissions WHERE name = 'modules.manage');
+INSERT INTO permissions (name) SELECT 'invitations.manage' WHERE NOT EXISTS (SELECT 1 FROM permissions WHERE name = 'invitations.manage');
+INSERT INTO permissions (name) SELECT 'audit.view' WHERE NOT EXISTS (SELECT 1 FROM permissions WHERE name = 'audit.view');
+INSERT INTO permissions (name) SELECT 'environment.leave' WHERE NOT EXISTS (SELECT 1 FROM permissions WHERE name = 'environment.leave');
+INSERT INTO role_permissions (role_id, permission_id) SELECT r.id, p.id FROM roles r CROSS JOIN permissions p WHERE r.name = 'Dueño' AND p.name = 'environment.view' AND NOT EXISTS (SELECT 1 FROM role_permissions rp WHERE rp.role_id = r.id AND rp.permission_id = p.id);
+INSERT INTO role_permissions (role_id, permission_id) SELECT r.id, p.id FROM roles r CROSS JOIN permissions p WHERE r.name = 'Dueño' AND p.name = 'environment.edit' AND NOT EXISTS (SELECT 1 FROM role_permissions rp WHERE rp.role_id = r.id AND rp.permission_id = p.id);
+INSERT INTO role_permissions (role_id, permission_id) SELECT r.id, p.id FROM roles r CROSS JOIN permissions p WHERE r.name = 'Dueño' AND p.name = 'members.manage' AND NOT EXISTS (SELECT 1 FROM role_permissions rp WHERE rp.role_id = r.id AND rp.permission_id = p.id);
+INSERT INTO role_permissions (role_id, permission_id) SELECT r.id, p.id FROM roles r CROSS JOIN permissions p WHERE r.name = 'Dueño' AND p.name = 'admins.manage' AND NOT EXISTS (SELECT 1 FROM role_permissions rp WHERE rp.role_id = r.id AND rp.permission_id = p.id);
+INSERT INTO role_permissions (role_id, permission_id) SELECT r.id, p.id FROM roles r CROSS JOIN permissions p WHERE r.name = 'Dueño' AND p.name = 'modules.manage' AND NOT EXISTS (SELECT 1 FROM role_permissions rp WHERE rp.role_id = r.id AND rp.permission_id = p.id);
+INSERT INTO role_permissions (role_id, permission_id) SELECT r.id, p.id FROM roles r CROSS JOIN permissions p WHERE r.name = 'Dueño' AND p.name = 'invitations.manage' AND NOT EXISTS (SELECT 1 FROM role_permissions rp WHERE rp.role_id = r.id AND rp.permission_id = p.id);
+INSERT INTO role_permissions (role_id, permission_id) SELECT r.id, p.id FROM roles r CROSS JOIN permissions p WHERE r.name = 'Dueño' AND p.name = 'audit.view' AND NOT EXISTS (SELECT 1 FROM role_permissions rp WHERE rp.role_id = r.id AND rp.permission_id = p.id);
+INSERT INTO role_permissions (role_id, permission_id) SELECT r.id, p.id FROM roles r CROSS JOIN permissions p WHERE r.name = 'Administrador General' AND p.name = 'environment.view' AND NOT EXISTS (SELECT 1 FROM role_permissions rp WHERE rp.role_id = r.id AND rp.permission_id = p.id);
+INSERT INTO role_permissions (role_id, permission_id) SELECT r.id, p.id FROM roles r CROSS JOIN permissions p WHERE r.name = 'Administrador General' AND p.name = 'environment.edit' AND NOT EXISTS (SELECT 1 FROM role_permissions rp WHERE rp.role_id = r.id AND rp.permission_id = p.id);
+INSERT INTO role_permissions (role_id, permission_id) SELECT r.id, p.id FROM roles r CROSS JOIN permissions p WHERE r.name = 'Administrador General' AND p.name = 'members.manage' AND NOT EXISTS (SELECT 1 FROM role_permissions rp WHERE rp.role_id = r.id AND rp.permission_id = p.id);
+INSERT INTO role_permissions (role_id, permission_id) SELECT r.id, p.id FROM roles r CROSS JOIN permissions p WHERE r.name = 'Administrador General' AND p.name = 'modules.manage' AND NOT EXISTS (SELECT 1 FROM role_permissions rp WHERE rp.role_id = r.id AND rp.permission_id = p.id);
+INSERT INTO role_permissions (role_id, permission_id) SELECT r.id, p.id FROM roles r CROSS JOIN permissions p WHERE r.name = 'Administrador General' AND p.name = 'invitations.manage' AND NOT EXISTS (SELECT 1 FROM role_permissions rp WHERE rp.role_id = r.id AND rp.permission_id = p.id);
+INSERT INTO role_permissions (role_id, permission_id) SELECT r.id, p.id FROM roles r CROSS JOIN permissions p WHERE r.name = 'Administrador General' AND p.name = 'audit.view' AND NOT EXISTS (SELECT 1 FROM role_permissions rp WHERE rp.role_id = r.id AND rp.permission_id = p.id);
+INSERT INTO role_permissions (role_id, permission_id) SELECT r.id, p.id FROM roles r CROSS JOIN permissions p WHERE r.name = 'Administrador General' AND p.name = 'environment.leave' AND NOT EXISTS (SELECT 1 FROM role_permissions rp WHERE rp.role_id = r.id AND rp.permission_id = p.id);
+INSERT INTO role_permissions (role_id, permission_id) SELECT r.id, p.id FROM roles r CROSS JOIN permissions p WHERE r.name = 'Organizador' AND p.name = 'environment.view' AND NOT EXISTS (SELECT 1 FROM role_permissions rp WHERE rp.role_id = r.id AND rp.permission_id = p.id);
+INSERT INTO role_permissions (role_id, permission_id) SELECT r.id, p.id FROM roles r CROSS JOIN permissions p WHERE r.name = 'Organizador' AND p.name = 'environment.leave' AND NOT EXISTS (SELECT 1 FROM role_permissions rp WHERE rp.role_id = r.id AND rp.permission_id = p.id);
+INSERT INTO role_permissions (role_id, permission_id) SELECT r.id, p.id FROM roles r CROSS JOIN permissions p WHERE r.name = 'Participante' AND p.name = 'environment.view' AND NOT EXISTS (SELECT 1 FROM role_permissions rp WHERE rp.role_id = r.id AND rp.permission_id = p.id);
+INSERT INTO role_permissions (role_id, permission_id) SELECT r.id, p.id FROM roles r CROSS JOIN permissions p WHERE r.name = 'Participante' AND p.name = 'environment.leave' AND NOT EXISTS (SELECT 1 FROM role_permissions rp WHERE rp.role_id = r.id AND rp.permission_id = p.id);
+INSERT INTO modules (code, name, description) SELECT 'league', 'Liga', 'Todos contra todos.' WHERE NOT EXISTS (SELECT 1 FROM modules WHERE code = 'league');
+INSERT INTO modules (code, name, description) SELECT 'swiss', 'Sistema Suizo', 'Emparejamientos por rendimiento acumulado.' WHERE NOT EXISTS (SELECT 1 FROM modules WHERE code = 'swiss');
+INSERT INTO modules (code, name, description) SELECT 'elimination', 'Eliminación Directa', 'Llaves de eliminación.' WHERE NOT EXISTS (SELECT 1 FROM modules WHERE code = 'elimination');
+
+-- El dueño se identifica siempre por workspaces.owner_id.
+INSERT INTO workspace_members (workspace_id, user_id, role_id, assigned_at)
+SELECT w.id, w.owner_id, (SELECT MIN(id) FROM roles WHERE name = 'Dueño'), NOW()
+FROM workspaces w
+WHERE NOT EXISTS (SELECT 1 FROM workspace_members wm WHERE wm.workspace_id = w.id AND wm.user_id = w.owner_id);
+
+-- Ampliación compatible con los torneos existentes. No elimina datos.
+ALTER TABLE tournament_config
+  ADD COLUMN IF NOT EXISTS points_win DECIMAL(8,2) NOT NULL DEFAULT 3,
+  ADD COLUMN IF NOT EXISTS points_draw DECIMAL(8,2) NOT NULL DEFAULT 1,
+  ADD COLUMN IF NOT EXISTS points_loss DECIMAL(8,2) NOT NULL DEFAULT 0,
+  ADD COLUMN IF NOT EXISTS allow_draws BOOLEAN NOT NULL DEFAULT 1,
+  ADD COLUMN IF NOT EXISTS score_order VARCHAR(10) NOT NULL DEFAULT 'higher',
+  ADD COLUMN IF NOT EXISTS score_label VARCHAR(40) NOT NULL DEFAULT 'Marcador';
+
+CREATE TABLE IF NOT EXISTS tournament_rounds (
+  tournament_id INT NOT NULL,
+  number SMALLINT UNSIGNED NOT NULL,
+  name VARCHAR(100) NOT NULL,
+  status VARCHAR(12) NOT NULL DEFAULT 'Abierta',
+  PRIMARY KEY (tournament_id, number),
+  CONSTRAINT fk_round_tournament FOREIGN KEY (tournament_id) REFERENCES tournament(id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+ALTER TABLE tournament_match
+  MODIFY team_1_id INT NULL,
+  MODIFY team_2_id INT NULL,
+  MODIFY score_1 DECIMAL(10,2) NULL,
+  MODIFY score_2 DECIMAL(10,2) NULL,
+  MODIFY scheduled_at TIMESTAMP NULL,
+  ADD COLUMN IF NOT EXISTS round_no SMALLINT UNSIGNED NULL,
+  ADD COLUMN IF NOT EXISTS position SMALLINT UNSIGNED NULL,
+  ADD COLUMN IF NOT EXISTS winner_id INT NULL,
+  ADD COLUMN IF NOT EXISTS source_1_id INT NULL,
+  ADD COLUMN IF NOT EXISTS source_2_id INT NULL,
+  ADD COLUMN IF NOT EXISTS source_kind VARCHAR(10) NOT NULL DEFAULT 'winner',
+  ADD COLUMN IF NOT EXISTS notes VARCHAR(500) NOT NULL DEFAULT '',
+  ADD COLUMN IF NOT EXISTS revision INT UNSIGNED NOT NULL DEFAULT 0;
+CREATE UNIQUE INDEX IF NOT EXISTS uq_match_position ON tournament_match(id_tournament, round_no, position);
+
+-- Conserva la identidad y el orden del sorteo aun si cambia el perfil del usuario.
+CREATE TABLE IF NOT EXISTS tournament_seeds (
+  tournament_id INT NOT NULL,
+  entrant_id INT NOT NULL,
+  seed SMALLINT UNSIGNED NOT NULL,
+  name VARCHAR(150) NOT NULL,
+  PRIMARY KEY (tournament_id, entrant_id),
+  UNIQUE KEY uq_seed (tournament_id, seed),
+  CONSTRAINT fk_seed_tournament FOREIGN KEY (tournament_id) REFERENCES tournament(id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+COMMIT;

@@ -1,8 +1,18 @@
-<div class="logo__container">
+<?php
+$publicHeader = empty($_SESSION['authenticated']);
+$headerPage = is_string($_GET['page'] ?? null) ? $_GET['page'] : 'index';
+?>
+<a class="logo__container" href="?page=index" aria-label="Nuva, ir al inicio">
     <img class="logo__img" src="/public/assets/logo/nuva-main.svg" alt="Nuva">
-</div>
-<div class="header__actions">
-    <!-- <button class="header__btn header__btn--settings" type="button" aria-label="Configuracion">
-        <i class="header__btn--icon" data-lucide="settings"></i>
-    </button> -->
-</div>
+</a>
+<?php if ($publicHeader): ?>
+    <nav class="header__public-nav" aria-label="Navegación pública">
+        <a href="?page=explore" <?= in_array($headerPage, ['competitions', 'competitions-all', 'tournament'], true) ? 'aria-current="page"' : '' ?>>Explorar Nuva</a>
+        <a href="?page=guide" <?= $headerPage === 'guide' ? 'aria-current="page"' : '' ?>>Cómo funciona</a>
+    </nav>
+    <?php if ($headerPage !== 'login' && $headerPage !== 'loginauth'): ?>
+        <div class="header__actions">
+            <a class="header__login" href="?page=login"><i data-lucide="log-in" aria-hidden="true"></i>Iniciar sesión</a>
+        </div>
+    <?php endif; ?>
+<?php endif; ?>

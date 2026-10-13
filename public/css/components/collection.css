@@ -21,6 +21,7 @@
     align-items: center;
     gap: .8rem;
     padding: 1.4rem 1.6rem;
+    border-radius: var(--radius-control) var(--radius-control) 0 0;
     min-height: 4.8rem;
     cursor: pointer;
     font-size: 1.4rem;
@@ -44,21 +45,23 @@
 .collection__field input, .collection__field select {
     width: 100%;
     min-width: 0;
-    min-height: 4.4rem;
-    padding: 1rem;
+    min-height: 4.6rem;
+    padding: 1.1rem 1.2rem;
     border: 1px solid var(--border);
-    border-radius: .6rem;
+    border-radius: var(--radius-control);
     background: var(--bg-secondary);
     color: var(--text);
     font: inherit;
     font-size: 1.6rem;
+    line-height: 1.4;
+    transition: border-color .18s ease;
     color-scheme: dark;
 }
 .collection__field input::placeholder { color: var(--text-alternative); opacity: 1; }
 .collection__actions { display: flex; align-items: center; flex-wrap: wrap; gap: 1.6rem; grid-column: 1 / -1; }
 .collection__actions .nuva-anchor { padding-block: 1rem; }
 .collection__count { color: var(--text-alternative); font-size: 1.3rem; margin-bottom: 1.2rem; }
-.collection__empty { padding: 3.2rem 2rem; text-align: center; }
+.collection__empty { padding: 4rem 2.4rem; text-align: center; }
 .collection__empty > svg { color: var(--text-alternative); width: 3.2rem; height: 3.2rem; margin-bottom: 1.6rem; }
 .collection__empty h3 { font-size: 1.6rem; }
 .collection__empty p { color: var(--text-alternative); font-size: 1.4rem; }
@@ -69,6 +72,7 @@
     justify-content: center;
     gap: .8rem;
     padding: 1.4rem 1.6rem;
+    border-radius: var(--radius-control) var(--radius-control) 0 0;
     min-height: 4.8rem;
     color: var(--text-alternative);
     border-bottom: .3rem solid transparent;
@@ -78,9 +82,11 @@
 }
 .collection-tabs__link svg { width: 1.8rem; height: 1.8rem; flex-shrink: 0; }
 .collection-tabs__link:hover { color: var(--text); background: var(--control-bg); }
-.collection-tabs__link.is-active { color: var(--primary); border-color: var(--primary); }
+.collection-tabs__link.is-active { color: var(--accent-text); border-color: var(--primary); background: rgba(250, 70, 22, .05); }
 
 @media (max-width: 575px) {
     .collection__form { grid-template-columns: 1fr; }
     .collection-tabs__link { padding: 1.2rem .8rem; flex: 1; gap: .5rem; font-size: 1.3rem; }
 }
+
+.collection__field input:focus, .collection__field select:focus { border-color: var(--primary); }

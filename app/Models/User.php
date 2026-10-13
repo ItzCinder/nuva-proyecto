@@ -75,6 +75,15 @@ class User extends Model {
         return $this;
     }
 
+    public function updateDisplayName(string $name): bool
+    {
+        if ($this->id === null) return false;
+        $stmt = $this->db->prepare('UPDATE users SET name = ? WHERE id = ?');
+        $saved = $stmt->execute([$name, $this->id]);
+        if ($saved) $this->name = $name;
+        return $saved;
+    }
+
     public function getPictureUrl(): ?string
     {
         return $this->pictureUrl;

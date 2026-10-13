@@ -1,0 +1,19 @@
+-- Ejecutar una vez sobre una instalación existente: mysql -u root NuvaBD < database/migrations/003_tournaments.sql
+-- No elimina torneos existentes.
+ALTER TABLE tournament
+  ADD COLUMN IF NOT EXISTS name VARCHAR(120) NOT NULL DEFAULT 'Torneo sin nombre',
+  ADD COLUMN IF NOT EXISTS description VARCHAR(500) NOT NULL DEFAULT '',
+  ADD COLUMN IF NOT EXISTS discipline_category VARCHAR(20) NOT NULL DEFAULT 'otros',
+  ADD COLUMN IF NOT EXISTS discipline VARCHAR(80) NOT NULL DEFAULT 'Otra disciplina',
+  ADD COLUMN IF NOT EXISTS has_team BOOLEAN NOT NULL DEFAULT 0,
+  ADD COLUMN IF NOT EXISTS max_participants SMALLINT UNSIGNED NOT NULL DEFAULT 16,
+  ADD COLUMN IF NOT EXISTS published BOOLEAN NOT NULL DEFAULT 0;
+ALTER TABLE tournament_config
+  ADD COLUMN IF NOT EXISTS league_legs TINYINT UNSIGNED NOT NULL DEFAULT 1,
+  ADD COLUMN IF NOT EXISTS swiss_rounds TINYINT UNSIGNED NULL,
+  ADD COLUMN IF NOT EXISTS third_place BOOLEAN NOT NULL DEFAULT 0,
+  ADD COLUMN IF NOT EXISTS team_size TINYINT UNSIGNED NULL;
+ALTER TABLE tournament_teams
+  ADD COLUMN IF NOT EXISTS name VARCHAR(100) NOT NULL DEFAULT 'Equipo sin nombre';
+ALTER TABLE tournament_members
+  ADD COLUMN IF NOT EXISTS team_id INT NULL;

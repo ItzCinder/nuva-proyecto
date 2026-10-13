@@ -1,11 +1,29 @@
 <?php
+if ($collectionType === 'environments') {
+    require __DIR__ . '/../environments/collection.php';
+    return;
+}
 // Variables de entrada: $collectionType, $collectionPage y $collectionAll.
 // El alcance local permite reutilizar el listado sin contaminar la vista padre.
-(static function (string $type, string $page, bool $showAll): void {
-    $collections = require __DIR__ . '/collection-data.php';
-    $items = $collections[$type];
-    $isEnvironment = $type === 'environments';
-    $title = ['competitions' => 'Competiciones activas', 'tournaments' => 'Mis torneos', 'environments' => 'Mis entornos'][$type];
+(static function (string $type, string $page, bool $showAll, array $rows): void {
+    $items = [];
+    foreach ($rows as $row) {
+        $date = static function ($value): string {
+            if (!$value || str_starts_with((string)$value, '0000-00-00')) return 'Sin fecha';
+            return (new DateTimeImmutable($value, new DateTimeZone('UTC')))->setTimezone(new DateTimeZone('America/Montevideo'))->format('d/m/Y');
+        };
+        $items[] = [
+            'id' => (int)$row['id'], 'title' => $row['name'], 'sport' => $row['discipline'],
+            'category' => \app\Models\Tournament::CATEGORIES[$row['discipline_category']] ?? 'Otros',
+            'status' => $row['status'], 'format' => $row['format_name'],
+            'players' => (int)($row['has_team'] ? $row['team_count'] : $row['member_count']),
+            'unit' => $row['has_team'] ? 'Equipos' : 'Participantes',
+            'dates' => $date($row['start_date']) . ' — ' . $date($row['end_date']),
+            'icon' => $row['discipline_category'] === 'mental' ? 'chess-king' : ($row['discipline_category'] === 'esports' ? 'gamepad-2' : 'trophy'),
+        ];
+    }
+    $isEnvironment = false;
+    $title = ['competitions' => 'Competiciones públicas', 'tournaments' => 'Mis torneos', 'environments' => 'Mis entornos'][$type];
     $allPage = ['competitions' => 'competitions-all', 'tournaments' => 'my-tournaments', 'environments' => 'my-environments'][$type];
     $escape = static fn (string $value): string => htmlspecialchars($value, ENT_QUOTES, 'UTF-8');
     $input = static fn (string $key): string => is_string($_GET[$key] ?? null) ? trim($_GET[$key]) : '';
@@ -13,8 +31,10 @@
     $filters = ['q' => $input('q')];
     $options = [];
     if (!$isEnvironment) {
-        foreach (['sport' => 'Deporte', 'status' => 'Estado', 'format' => 'Formato'] as $key => $label) {
-            $values = array_values(array_unique(array_column($items, $key)));
+        foreach (['category' => 'Categoría', 'sport' => 'Disciplina', 'status' => 'Estado', 'format' => 'Formato'] as $key => $label) {
+            $values = $key === 'category'
+                ? array_values(\app\Models\Tournament::CATEGORIES)
+                : array_values(array_unique(array_column($items, $key)));
             $options[$key] = ['label' => $label, 'values' => $values];
             $filters[$key] = in_array($input($key), $values, true) ? $input($key) : '';
         }
@@ -24,7 +44,7 @@
         if ($filters['q'] !== '' && !str_contains($normalize($item['title'] . ' ' . ($item['sport'] ?? '')), $normalize($filters['q']))) {
             return false;
         }
-        foreach (['sport', 'status', 'format'] as $key) {
+        foreach (['category', 'sport', 'status', 'format'] as $key) {
             if (($filters[$key] ?? '') !== '' && ($item[$key] ?? '') !== $filters[$key]) {
                 return false;
             }
@@ -33,16 +53,17 @@
     }));
     $visibleItems = $showAll ? $matches : array_slice($matches, 0, 3);
     $baseQuery = ['page' => $page];
-    if ($page === 'profile') {
+    if (in_array($page,['profile','explore'],true)) {
         $baseQuery['collection'] = $type;
     }
     $url = static fn (array $query): string => '?' . http_build_query($query, '', '&', PHP_QUERY_RFC3986);
+    if ($page === 'public-environment') $baseQuery['id'] = is_string($_GET['id'] ?? null) ? $_GET['id'] : '';
     $resetUrl = $url($baseQuery) . ($page === 'profile' ? '#collections' : '');
     $allUrl = $url(['page' => $allPage] + $activeFilters);
-    $backUrl = $type === 'competitions' ? '?page=competitions' : '?page=profile&collection=' . $type . '#collections';
+    $backUrl = $type === 'competitions' ? '?page=explore' : '?page=profile&collection=' . $type . '#collections';
 ?>
 <section class="comp collection" aria-labelledby="collection-title">
-    <?php if ($showAll): ?>
+    <?php if ($showAll && $page !== 'explore' && $page !== 'profile'): ?>
         <a class="nuva-anchor collection__back" href="<?= $escape($backUrl) ?>">← <?= $type === 'competitions' ? 'Volver a competiciones' : 'Volver a mi cuenta' ?></a>
     <?php endif; ?>
     <div class="collection__heading">
@@ -88,10 +109,10 @@
     <?php else: ?>
         <div class="collection__empty nuva-card">
             <i data-lucide="<?= $isEnvironment ? 'folders' : 'search' ?>" aria-hidden="true"></i>
-            <h3><?= $activeFilters ? 'No hay resultados con estos filtros' : 'Todavía no hay entornos para mostrar' ?></h3>
-            <p><?= $activeFilters ? 'Prueba otra búsqueda o limpia los filtros.' : 'Tus entornos aparecerán en este listado cuando estén disponibles.' ?></p>
+            <h3><?= $activeFilters ? 'No hay resultados con estos filtros' : 'Todavía no hay torneos para mostrar' ?></h3>
+            <p><?= $activeFilters ? 'Prueba otra búsqueda o limpia los filtros.' : 'Los torneos aparecerán aquí cuando estén disponibles.' ?></p>
             <?php if ($activeFilters): ?><a class="nuva-anchor" href="<?= $escape($resetUrl) ?>">Limpiar filtros</a><?php endif; ?>
         </div>
     <?php endif; ?>
 </section>
-<?php })($collectionType, $collectionPage, $collectionAll ?? false); ?>
+<?php })($collectionType, $collectionPage, $collectionAll ?? false, $tournamentItems ?? []); ?>

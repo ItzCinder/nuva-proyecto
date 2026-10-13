@@ -63,14 +63,19 @@ $page = is_string($page) ? $page : 'index';
 
 switch ($page) {
     case 'index':
-        /*
-        Si no esta autenticado
-        */
-        if (!$isAuthenticated()) {
-            $render('public/home-public');
-            break;
-        }
-        $render('account/home');
+    case 'account':
+        require_once dirname(__DIR__) . '/app/Services/Database.php';
+        require_once dirname(__DIR__) . '/app/Models/Model.php';
+        require_once dirname(__DIR__) . '/app/Models/User.php';
+        require_once dirname(__DIR__) . '/app/Models/Role.php';
+        require_once dirname(__DIR__) . '/app/Models/Workspace.php';
+        require_once dirname(__DIR__) . '/app/Models/Tournament.php';
+        require_once dirname(__DIR__) . '/app/Controllers/HomeController.php';
+        (new \App\Controllers\HomeController())->handle($isAuthenticated(), $render);
+        break;
+
+    case 'guide':
+        $render('public/guide');
         break;
 
     case 'login':
@@ -80,92 +85,63 @@ switch ($page) {
     case 'loginauth':
         $render('login');
         break;
-    /*
-    Borra las creedenciales de sesión.
-    Despues lo vuelve a mandar para iniciar sesión.
-    */
     case 'logout':
-        /*
-        Eliminar cookies
-        */
-        $params = session_get_cookie_params();
-        setcookie(session_name(), '', [
-            'expires' => time() - 42000,
-            'path' => $params['path'],
-            'domain' => $params['domain'] ?? '',
-            'secure' => $params['secure'],
-            'httponly' => $params['httponly'],
-            'samesite' => $params['samesite'] ?? 'Lax',
-        ]);
-
-        $_SESSION = [];
-        session_destroy();
-        header('Location: ?page=login');
-        exit;
-
-    case 'competitions':
-        $render('public/competitions');
-        break;
-
-    case 'competitions-all':
-        $render('public/competitions', [
-            'collectionType' => 'competitions',
-            'collectionPage' => 'competitions-all',
-            'collectionAll' => true,
-            'collectionTitle' => 'Todas las competiciones',
-        ]);
-        break;
-
-    case 'my-tournaments':
-    case 'my-environments':
-        if (!$isAuthenticated()) {
-            $render('login');
-            break;
-        }
-        $render('public/competitions', [
-            'collectionType' => $page === 'my-tournaments' ? 'tournaments' : 'environments',
-            'collectionPage' => $page,
-            'collectionAll' => true,
-            'collectionTitle' => $page === 'my-tournaments' ? 'Mis torneos' : 'Mis entornos',
-        ]);
-        break;
-
-    case 'account':
-        $render('account/home');
-        break;
-
     case 'profile':
-        if (!$isAuthenticated()) {
-            $render('login');
-            break;
-        }
+    case 'settings':
         require_once dirname(__DIR__) . '/app/Services/Database.php';
         require_once dirname(__DIR__) . '/app/Models/Model.php';
         require_once dirname(__DIR__) . '/app/Models/User.php';
+        require_once dirname(__DIR__) . '/app/Models/Role.php';
+        require_once dirname(__DIR__) . '/app/Models/Workspace.php';
+        require_once dirname(__DIR__) . '/app/Models/Tournament.php';
+        require_once dirname(__DIR__) . '/app/Controllers/AccountController.php';
+        (new \App\Controllers\AccountController())->handle($page, $render);
+        break;
 
-        $userId = $_SESSION['user_id'] ?? null;
+    case 'my-environments':
+    case 'my-tournaments':
+        $personalCollection=$page==='my-environments'?'environments':'tournaments';
+        $personalQuery=$_GET; $personalQuery['page']='profile'; $personalQuery['collection']=$personalCollection;
+        header('Location: ?'.http_build_query($personalQuery).'#collections',true,303);
+        break;
 
-        /*
-        Verificar si existe un usuario valido en la sesión.
-        */
-         if (!is_int($userId) && !ctype_digit((string) $userId)) {
-            $_SESSION = [];
-            session_destroy();
-            header('Location: ?page=login');
-            exit;
-        }
+    case 'explore':
+    case 'competitions':
+    case 'competitions-all':
+    case 'public-environment':
+        require_once dirname(__DIR__).'/app/Services/Database.php';
+        require_once dirname(__DIR__).'/app/Models/Model.php';
+        require_once dirname(__DIR__).'/app/Models/Role.php';
+        require_once dirname(__DIR__).'/app/Models/Workspace.php';
+        require_once dirname(__DIR__).'/app/Models/Tournament.php';
+        require_once dirname(__DIR__).'/app/Controllers/ExploreController.php';
+        (new \App\Controllers\ExploreController())->handle($page,$render);
+        break;
 
-        $user = \app\Models\User::findById((int) $userId);
+    case 'tournament-create':
+    case 'tournament':
+    case 'tournament-edit':
+        require_once dirname(__DIR__) . '/app/Services/Database.php';
+        require_once dirname(__DIR__) . '/app/Models/Model.php';
+        require_once dirname(__DIR__) . '/app/Models/Role.php';
+        require_once dirname(__DIR__) . '/app/Models/Workspace.php';
+        require_once dirname(__DIR__) . '/app/Models/Tournament.php';
+        require_once dirname(__DIR__) . '/app/Controllers/TournamentController.php';
+        (new \App\Controllers\TournamentController())->handle($page, $render);
+        break;
 
-        if ($user === null) {
-            $_SESSION = [];
-            session_destroy();
-            header('Location: ?page=login');
-            exit;
-        }
-        $render('account/profile', [
-            'user' => $user,
-        ]);
+    case 'environment-create':
+    case 'environment':
+    case 'environment-invitation':
+        require_once dirname(__DIR__) . '/app/Services/Database.php';
+        require_once dirname(__DIR__) . '/app/Models/Model.php';
+        require_once dirname(__DIR__) . '/app/Models/User.php';
+        require_once dirname(__DIR__) . '/app/Models/Role.php';
+        require_once dirname(__DIR__) . '/app/Models/Workspace.php';
+        require_once dirname(__DIR__) . '/app/Models/Tournament.php';
+        require_once dirname(__DIR__) . '/app/Controllers/WorkspaceController.php';
+        $controller = new \App\Controllers\WorkspaceController();
+        $controller->handle($page, $render);
         break;
 
     case 'google-callback':
@@ -181,6 +157,13 @@ switch ($page) {
         $controller->callback();
         break;
 
+    case 'google-photo-refresh':
+        require_once dirname(__DIR__) . '/vendor/autoload.php';
+        require_once dirname(__DIR__) . '/app/Services/GoogleAuthService.php';
+        require_once dirname(__DIR__) . '/app/Controllers/GoogleAuthController.php';
+        (new \App\Controllers\GoogleAuthController())->refreshPhoto();
+        break;
+
         /*
         Enrutamiento para loguearte con Google.
         */
@@ -189,14 +172,13 @@ switch ($page) {
         require_once dirname(__DIR__) . '/app/Services/GoogleAuthService.php';
         require_once dirname(__DIR__) . '/app/Controllers/GoogleAuthController.php';
 
-        if (!$isAuthenticated()) {
-            $controller = new \App\Controllers\GoogleAuthController();
-            $controller->login();
+        if ($isAuthenticated()) {
+            header('Location: ?page=profile', true, 303);
+            break;
         }
-
-        $render('account/profile');
+        (new \App\Controllers\GoogleAuthController())->login();
         break;
-        
+
 
     default:
         http_response_code(404);

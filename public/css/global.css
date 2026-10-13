@@ -1,5 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
-:root{
+
+:root {
     /* color background = fondo */
     --bg: #0d0e11;
     /* Coolor background secundario (usado para el navbar y el header */
@@ -9,7 +10,7 @@
     /* color usado para los bordes */
     --border: #232730;
     /* color fondo de botones */
-    --btn-bg: var(--primary);
+    --btn-bg: #d93c14;
     /* color texto de los botones */
     --btn-text: #ffffff;
     /* control background = para inputs, selects, textareas, checkboxes */
@@ -18,7 +19,11 @@
     --icon-color: #e6e6e6;
     /* Color usado para el texto */
     --text: #ffffff;
-    --text-alternative: #9ba3af;
+    --text-alternative: #a6aeba;
+    --accent-text: #ff8969;
+    --radius-card: 1.2rem;
+    --radius-control: 1rem;
+    --shadow-card: 0 .4rem 1.6rem rgba(0, 0, 0, .12);
 
     /* Color background para los tags */
     --color-tag-bg: rgba(255, 87, 34, 0.15);
@@ -26,7 +31,7 @@
     --green: #10b981;
 
     /* Variables para fondo gradiente */
-    
+
     /* capas de superficie para crear profundidad visual (más clara) */
     --surface-1: rgba(32, 36, 43, 1);
 
@@ -46,13 +51,13 @@
 
 /* Configuracion inical global de css GLOBAL */
 
-html{
+html {
     font-size: 10px;
     background: var(--bg);
     color-scheme: dark;
 }
 
-body{
+body {
     background: var(--bg);
     font-family: "Inter", sans-serif;
     color: var(--text);
@@ -62,13 +67,15 @@ body{
     overflow: hidden;
     padding-bottom: calc(var(--tabbar-height) + env(safe-area-inset-bottom));
     font-size: 1.4rem;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
 }
 
-.anchor-not-style{
+.anchor-not-style {
     text-decoration: none;
 }
 
-.main{
+.main {
     flex: 1 1 auto;
     min-height: 0;
     min-width: 0;
@@ -79,11 +86,14 @@ body{
     box-sizing: border-box;
     overflow-y: auto;
     overflow-x: hidden;
+    scrollbar-width: thin;
+    scrollbar-color: #343a45 transparent;
 }
 
 .nuva-anchor {
-    color: var(--primary);
-    font-size: 1.3rem;
+    color: var(--accent-text);
+    font-size: 1.4rem;
+    text-underline-offset: .3rem;
     font-weight: 600;
 }
 
@@ -94,37 +104,40 @@ body{
     background: var(--border);
 }
 
-.section-title{
+.section-title {
     font-size: 1.9rem;
-    font-weight:800;
+    font-weight: 700;
+    letter-spacing: -.025em;
+    line-height: 1.3;
     color: var(--text);
 
 }
 
 /* Estilo de Cards (Tarjetas) */
-.nuva-card{
+.nuva-card {
     background-color: var(--control-bg);
     border: .1rem solid var(--border);
-    border-radius: .8rem;
+    border-radius: var(--radius-card);
+    box-shadow: var(--shadow-card);
 }
 
-.nuva-card--interactive{
+.nuva-card--interactive {
     cursor: pointer;
-    transition: border .2s ease;
+    transition: border-color .18s ease, background-color .18s ease;
 }
 
-.nuva-card--interactive:hover{
-    border-color: var(--primary);
+.nuva-card--interactive:hover {
+    border-color: rgba(250, 70, 22, .5);
 }
 
 /* Etiquetas / Insignias (Badges) */
-.nuva-badge{
+.nuva-badge {
     display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: .5rem;
     background-color: var(--color-tag-bg);
-    color: var(--primary);
+    color: var(--accent-text);
     border: 1px solid rgba(255, 90, 54, 0.2);
     font-weight: 700;
     border-radius: 0.6rem;
@@ -132,13 +145,19 @@ body{
     letter-spacing: 0.5px;
 }
 
-.nuva-badge--pill{
+.nuva-badge--pill {
     border-radius: 9999px;
 }
 
 /* Boton */
-.nuva-btn{
-    all: unset;
+.nuva-btn {
+    appearance: none;
+    border: 1px solid transparent;
+    box-sizing: border-box;
+    min-height: 4.6rem;
+    font-family: inherit;
+    line-height: 1.4;
+    text-align: center;
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -149,26 +168,65 @@ body{
     font-weight: 600;
     font-size: 1.5rem;
     text-decoration: none;
-    border-radius: 1.2rem;
+    border-radius: var(--radius-control);
+    transition: background-color .18s ease, box-shadow .18s ease;
 }
 
-:where(a, button, input, select, summary):focus-visible {
+:where(a, button, input, textarea, select, summary):focus-visible {
     outline: .2rem solid var(--primary);
     outline-offset: .4rem;
 }
 
-@media (min-width: 992px){
-    body{
+@media (min-width: 992px) {
+    body {
         padding-bottom: 0;
         padding-left: 0;
     }
 
-    .main{
+    .main {
         width: calc(100% - var(--sidebar-width));
         margin-left: var(--sidebar-width);
     }
 }
 
 /* La portada pública no incluye navegación lateral. */
-body.page-public { padding-bottom: 0; }
-.page-public .main { width: 100%; margin-left: 0; }
+body.page-public {
+    padding-bottom: 0;
+}
+
+.page-public .main {
+    width: 100%;
+    margin-left: 0;
+}
+
+.nuva-btn:hover {
+    background: #bf3210;
+    color: var(--btn-text);
+    box-shadow: 0 .3rem 1rem rgba(250, 70, 22, .12);
+}
+
+.nuva-btn:disabled {
+    opacity: .5;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+.nuva-anchor:hover {
+    color: #ffae94;
+}
+
+::selection {
+    background: rgba(250, 70, 22, .3);
+    color: var(--text);
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+    *,
+    *::before,
+    *::after {
+        transition: none !important;
+        animation: none !important;
+        scroll-behavior: auto !important;
+    }
+}

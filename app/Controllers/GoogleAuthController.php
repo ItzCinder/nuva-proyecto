@@ -6,6 +6,7 @@ namespace App\Controllers;
 
 use App\Services\GoogleAuthService;
 use App\Services\UserService;
+use app\Models\User;
 
 class GoogleAuthController
 {
@@ -17,12 +18,24 @@ class GoogleAuthController
         exit;
     }
 
+    public function refreshPhoto(): void
+    {
+        $token = is_string($_POST['csrf_token'] ?? null) ? $_POST['csrf_token'] : '';
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST' || empty($_SESSION['authenticated']) ||
+            !ctype_digit((string)($_SESSION['user_id'] ?? '')) ||
+            !is_string($_SESSION['csrf_token'] ?? null) || !hash_equals($_SESSION['csrf_token'], $token)) {
+            http_response_code(403);
+            echo 'Solicitud inválida. Vuelve a tu cuenta e inténtalo de nuevo.';
+            return;
+        }
+        $_SESSION['google_photo_refresh_user_id'] = (int)$_SESSION['user_id'];
+        $this->login();
+    }
+
     public function callback(): void
     {
         if (!empty($_GET['error'])) {
-            unset($_SESSION['oauth2state']);
-            header('Location: ?page=login');
-            exit;
+            $this->loginError('No se completó el acceso con Google.');
         }
 
         $state = $_GET['state'] ?? null;
@@ -33,36 +46,49 @@ class GoogleAuthController
             !is_string($sessionState) ||
             !hash_equals($sessionState, $state)
         ) {
-            unset($_SESSION['oauth2state']);
-            http_response_code(400);
-            echo 'Estado OAuth inválido';
-            exit;
+            $this->loginError('La sesión de acceso venció. Vuelve a continuar con Google.');
         }
 
         $code = $_GET['code'] ?? null;
 
         if (!is_string($code) || $code === '') {
-            http_response_code(400);
-            echo 'Código de autorización no encontrado';
-            exit;
+            $this->loginError('No se recibió la autorización. Vuelve a continuar con Google.');
         }
 
-        $googleService = new GoogleAuthService();
-        $userInfo = $googleService->getUserInfoFromCode($code);
+        // Comprobar la base antes de utilizar el código de un solo uso de Google.
+        try {
+            \Database::getConnection();
+        } catch (\PDOException $e) {
+            error_log('GoogleAuth: conexión a la base fallida; SQLSTATE ' . $e->getCode());
+            $this->loginError('La base de datos de Nuva no está disponible. Inténtalo de nuevo cuando el servicio esté funcionando.');
+        }
+
+        try {
+            $googleService = new GoogleAuthService();
+            $userInfo = $googleService->getUserInfoFromCode($code);
+        } catch (\Throwable $e) {
+            error_log('GoogleAuth: autorización fallida; ' . get_class($e));
+            $this->loginError('No se pudo completar el acceso con Google. Vuelve a intentarlo desde el botón de acceso.');
+        }
 
         if (empty($userInfo['google_id']) || empty($userInfo['email'])) {
-            http_response_code(502);
-            echo 'Google no devolvió los datos necesarios del usuario';
-            exit;
+            $this->loginError('Google no devolvió los datos necesarios de tu cuenta. Vuelve a intentarlo.');
+        }
+
+        $refreshId = (int)($_SESSION['google_photo_refresh_user_id'] ?? 0);
+        if ($refreshId) {
+            $current = User::findById($refreshId);
+            if (!$current || $current->getGoogleId() !== $userInfo['google_id']) {
+                $this->loginError('Selecciona la misma cuenta de Google vinculada a este perfil de Nuva.');
+            }
         }
 
         try {
             $userService = new UserService();
             $user = $userService->findOrCreateFromGoogle($userInfo);
-        } catch (\Throwable) {
-            http_response_code(500);
-            echo 'No se pudo guardar el usuario';
-            exit;
+        } catch (\Throwable $e) {
+            error_log('GoogleAuth: no se pudo guardar el usuario; ' . get_class($e) . '; código ' . $e->getCode());
+            $this->loginError('No se pudo guardar tu cuenta en Nuva. Inténtalo de nuevo o consulta con la administración.');
         }
 
         unset($_SESSION['oauth2state']);
@@ -70,7 +96,37 @@ class GoogleAuthController
         $_SESSION['authenticated'] = true;
         $_SESSION['user_id'] = $user->getId();
 
-        header('Location: ?page=index');
+        if ($refreshId) {
+            unset($_SESSION['google_photo_refresh_user_id']);
+            if ($user->getPictureUrl()) {
+                $_SESSION['profile_flash'] = 'La foto de Google se sincronizó con tu cuenta.';
+            } else {
+                $_SESSION['profile_error'] = 'Google no proporcionó una foto para esta cuenta.';
+            }
+            header('Location: ?page=settings', true, 303);
+            exit;
+        }
+
+        $invitation = $_SESSION['pending_invitation'] ?? '';
+        if (is_string($invitation) && preg_match('/^(?:[A-HJ-NP-Z2-9]{8}|[a-f0-9]{48})$/', $invitation)) {
+            header('Location: ?page=environment-invitation&code=' . $invitation);
+        } else {
+            header('Location: ?page=index');
+        }
+        exit;
+    }
+
+    private function loginError(string $message): void
+    {
+        unset($_SESSION['oauth2state']);
+        if (isset($_SESSION['google_photo_refresh_user_id'])) {
+            unset($_SESSION['google_photo_refresh_user_id']);
+            $_SESSION['profile_error'] = $message;
+            header('Location: ?page=settings', true, 303);
+            exit;
+        }
+        $_SESSION['login_error'] = $message;
+        header('Location: ?page=login', true, 303);
         exit;
     }
 

@@ -1,0 +1,8 @@
+.explore-layout { width: min(100%,112rem); margin-inline: auto; display: grid; gap: 2.4rem; min-width: 0; }
+.explore-heading h1 { font-size: clamp(2.6rem,3vw,3.4rem); font-weight: 700; margin: .4rem 0 1rem; overflow-wrap: anywhere; }
+.explore-heading p:last-child { margin-bottom: 0; }
+.explore-invitation { padding: 2.4rem; }
+.explore-invitation .section-title { margin-top: 0; }
+.explore-layout .environment-card h2,.explore-layout .environment-card p { overflow-wrap: anywhere; }
+.explore-layout .comp.collection { width: 100%; margin: 0; }
+@media(max-width:600px) { .explore-invitation { padding: 1.8rem; } }

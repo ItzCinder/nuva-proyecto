@@ -1,118 +1,316 @@
-.hero__container{
-    padding: 2rem;
+.home-main {
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
-    border: .1rem var(--border) solid;
-    border-radius: 1rem;
-    background: 
-    radial-gradient(circle at 80% 0%, var(--accent) 0%, var(--accent-transparent) 60%),
-    linear-gradient(151deg, var(--surface-1) 0%, var(--surface-2) 100%);
+    gap: 2.6rem;
 }
 
-.hero__title{
-    width: 70%;
-    font-size: 2.5rem;
+.home-main>section,
+.home-notice {
+    width: min(100%, 112rem);
+    margin-inline: auto;
 }
 
-.hero__btn{
-    align-self: flex-start;
-    column-gap: .5rem;
+.hero__container {
+    padding: clamp(2.4rem, 4vw, 4rem);
+    border: .1rem solid var(--border);
+    border-radius: var(--radius-card);
+    background: radial-gradient(circle at 90% 0%, rgba(250, 70, 22, .24), transparent 48%), linear-gradient(151deg, var(--surface-1), var(--surface-2));
 }
 
-.hero__btn--icon{
-    width: 2rem;
-    height: 2rem;
-}
-
-.stats__container{
-    display: flex;
-    gap: 2rem;
-}
-
-
-
-.stats__container > .col-6 {
-    width: auto;
-    flex: 1 1 0;
-    min-width: 0;
-}
-
-.stats__card{
-    padding: 1.5rem;
-}
-
-.stats__card span{
-    color: var(--text-alternative);
+.home-eyebrow {
+    display: inline-block;
+    margin-bottom: 1rem;
+    color: var(--accent-text);
     font-size: 1.1rem;
+    font-weight: 800;
+    letter-spacing: .12em;
 }
 
-.stats__qty{
-    color: var(--primary);
-    font-size: 1.8rem;
-    font-weight: 900;
-    text-align: center;
+.hero__title {
+    max-width: 68rem;
+    margin: 0 0 1rem;
+    font-size: clamp(2.6rem, 3vw, 3.4rem);
+    font-weight: 750;
+    letter-spacing: -.035em;
 }
 
-.modules{
+.hero__text {
+    max-width: 67rem;
+    margin: 0;
+    color: var(--text-alternative);
+    font-size: 1.5rem;
+    line-height: 1.7;
+}
+
+.home-actions,
+.home-start__links {
     display: flex;
-    flex-direction: column;
-    gap: 1rem;
-}
-
-
-.modules__list{
-    display: flex;
-    flex-direction: row;
-    gap: 1rem;
-    justify-content: space-evenly;
-    flex-wrap: wrap;
-}
-
-.modules__card{
-    display: flex;
-    gap: 1.5rem;
-    flex-direction: column;
     align-items: center;
-    flex: 1 1 12rem;
-    padding: 2rem 1rem;
+    flex-wrap: wrap;
+    gap: 1.8rem;
+    margin-top: 2.2rem;
 }
 
-.hero__text { font-size: 1.4rem; line-height: 1.7; color: var(--text-alternative); }
-.hero__title { width: 100%; }
-@media (min-width: 992px) {
-    .main > section { width: min(100%, 112rem); margin-inline: auto; }
+.hero__btn {
+    gap: .8rem;
 }
 
-.modules__icon{
-    width: 4rem;
-    height: 4rem;
-    padding: .7rem;
-    border-radius: .5rem;
-    font-size: 2rem;
+.hero__btn svg,
+.home-tournament__open svg {
+    width: 1.7rem;
+    height: 1.7rem;
+}
+
+.home-link {
+    color: var(--accent-text);
+    font-weight: 650;
+    text-decoration: none;
+}
+
+.home-link:hover {
+    color: #ffad94;
+    text-decoration: underline;
+}
+
+.home-section__heading {
     display: flex;
+    align-items: end;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1.4rem;
+}
+
+.home-section__heading .section-title {
+    margin: 0;
+}
+
+.home-muted {
+    margin: .4rem 0 0;
+    color: var(--text-alternative);
+    font-size: 1.3rem;
+    line-height: 1.6;
+}
+
+.home-notice {
+    padding: 1.2rem 1.6rem;
+    border: .1rem solid #8a462b;
+    border-radius: var(--radius-control);
+    color: #ffc4af;
+    background: #301c19;
+}
+
+.stats__container,
+.modules__list,
+.home-tournaments {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1.6rem;
+}
+
+.stats__card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    min-height: 11rem;
+    padding: 1.8rem 2rem;
+    color: var(--text-alternative);
+    text-decoration: none;
+    transition: border-color .18s, transform .18s;
+}
+
+.stats__card:hover,
+.modules__card:hover,
+.home-tournament:hover {
+    border-color: rgba(250, 70, 22, .6);
+    transform: translateY(-2px);
+    color: var(--text);
+}
+
+.stats__card svg {
+    position: absolute;
+    top: 1.8rem;
+    right: 1.8rem;
+    width: 1.8rem;
+    color: var(--text-alternative);
+}
+
+.stats__qty {
+    color: var(--primary);
+    font-size: 2.8rem;
+    font-weight: 750;
+    line-height: 1.15;
+}
+
+.stats__card>span:nth-child(2) {
+    margin-top: .6rem;
+    font-size: 1.3rem;
+}
+
+.modules__list {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.modules__card {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.1rem;
+    min-height: 15rem;
+    padding: 1.8rem;
+    text-decoration: none;
+    transition: border-color .18s, transform .18s;
+}
+
+.modules__icon {
+    display: inline-flex;
     align-items: center;
     justify-content: center;
+    width: 4rem;
+    height: 4rem;
+    padding: .8rem;
+    border-radius: .8rem;
 }
 
-.modules__type{
-    color: var(--text-alternative);
-    display: block;
-    text-align: center;
-    white-space: normal;
-    word-break: break-word;
-}
-
-.modules__icon--deporte-tradicional{
-    background-color: #fa47162a;
+.modules__icon--tradicional {
+    background: #fa47162a;
     color: #FA4616;
 }
-.modules__icon--deporte-mental{
-    background-color: #335cff2a;
-    color: #335cff;
+
+.modules__icon--mental {
+    background: #335cff2a;
+    color: #7393ff;
 }
-.modules__icon--esports{
-    background-color: #16fa662a;
+
+.modules__icon--esports {
+    background: #16fa662a;
     color: #16fa66;
 }
 
+.modules__icon--otros {
+    background: #a978ee29;
+    color: #b998f4;
+}
+
+.modules__type {
+    color: var(--text);
+    font-size: 1.4rem;
+}
+
+.modules__count {
+    margin-top: auto;
+    color: var(--text-alternative);
+    font-size: 1.2rem;
+}
+
+.home-tournament {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    min-height: 17rem;
+    padding: 1.8rem;
+    color: var(--text);
+    text-decoration: none;
+    transition: border-color .18s, transform .18s;
+}
+
+.home-tournament__top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: .8rem;
+    color: var(--text-alternative);
+    font-size: 1.2rem;
+}
+
+.home-tournament__top .nuva-badge {
+    padding: .35rem .7rem;
+    font-size: 1rem;
+}
+
+.home-tournament>strong {
+    font-size: 1.5rem;
+    line-height: 1.4;
+}
+
+.home-tournament__open {
+    display: inline-flex;
+    align-items: center;
+    gap: .5rem;
+    margin-top: auto;
+    color: var(--accent-text);
+    font-size: 1.2rem;
+    font-weight: 650;
+}
+
+.home-empty {
+    padding: 2rem;
+    color: var(--text-alternative);
+}
+
+.home-start {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
+    padding: 2rem 2.4rem;
+    margin-bottom: 1rem;
+    background: linear-gradient(115deg, rgba(250, 70, 22, .13), var(--control-bg) 55%);
+}
+
+.home-start .section-title {
+    margin: 0;
+}
+
+.home-start .home-muted {
+    max-width: 62rem;
+}
+
+.home-start__links {
+    flex-shrink: 0;
+    margin: 0;
+}
+
+@media (max-width: 850px) {
+    .modules__list {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .home-start {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+}
+
+@media (max-width: 640px) {
+    .home-main {
+        gap: 2.2rem;
+    }
+
+    .stats__container,
+    .home-tournaments {
+        grid-template-columns: 1fr;
+    }
+
+    .stats__card {
+        min-height: 8.4rem;
+    }
+
+    .modules__card {
+        min-height: 12rem;
+    }
+
+    .home-section__heading {
+        align-items: flex-start;
+    }
+
+    .home-section__heading>.nuva-anchor {
+        text-align: right;
+    }
+}
+
+@media (max-width: 390px) {
+    .modules__list {
+        grid-template-columns: 1fr;
+    }
+}
