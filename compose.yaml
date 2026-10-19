@@ -1,0 +1,80 @@
+name: nuva
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    # El Apache del servidor puede publicar este puerto mediante HTTPS.
+    ports:
+      - "127.0.0.1:${NUVA_HTTP_PORT:-8080}:80"
+    environment:
+      DB_HOST: database
+      DB_PORT: 3306
+      DB_NAME: NuvaBD
+      DB_USER: nuva
+      DB_PASSWORD: ${NUVA_DB_PASSWORD:?Configura NUVA_DB_PASSWORD en .env.docker}
+      DB_CHARSET: utf8mb4
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-}
+      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET:-}
+      GOOGLE_REDIRECT_URI: ${GOOGLE_REDIRECT_URI:-http://localhost:8080/public/index.php?page=google-callback}
+      SESSION_SECURE_COOKIE: ${SESSION_SECURE_COOKIE:-0}
+      LOAD_DEMO_DATA: ${LOAD_DEMO_DATA:-1}
+    depends_on:
+      database:
+        condition: service_healthy
+    volumes:
+      - sessions:/var/lib/php/sessions
+      - environment-pictures:/var/www/nuva/public/assets/uploads/environments
+    networks:
+      - web
+      - database
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "php", "-r", "exit(file_get_contents('http://127.0.0.1/health.php') === 'OK' ? 0 : 1);"]
+      interval: 30s
+      timeout: 5s
+      start_period: 180s
+      retries: 3
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "5"
+
+  database:
+    image: mariadb:11.4
+    environment:
+      MARIADB_DATABASE: NuvaBD
+      MARIADB_USER: nuva
+      MARIADB_PASSWORD: ${NUVA_DB_PASSWORD:?Configura NUVA_DB_PASSWORD en .env.docker}
+      MARIADB_ROOT_PASSWORD: ${NUVA_DB_ROOT_PASSWORD:?Configura NUVA_DB_ROOT_PASSWORD en .env.docker}
+    volumes:
+      - database:/var/lib/mysql
+      - ./nuvabd.sql:/docker-entrypoint-initdb.d/10-schema.sql:ro
+      - ./docker/mariadb/20-permissions.sql:/docker-entrypoint-initdb.d/20-permissions.sql:ro
+      - ./docker/mariadb/nuva.cnf:/etc/mysql/conf.d/nuva.cnf:ro
+    networks:
+      - database
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      start_period: 30s
+      retries: 10
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "5"
+
+volumes:
+  database:
+  sessions:
+  environment-pictures:
+
+networks:
+  web:
+  database:
+    internal: true

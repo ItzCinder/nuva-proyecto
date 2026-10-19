@@ -1,0 +1,71 @@
+%YAML 1.1
+---
+# base.yaml será una copia de la configuración incluida en el paquete RPM.
+# Conserva los decodificadores y ajustes generales de esa versión de Suricata.
+include: /etc/suricata/ids-ips/base.yaml
+
+default-log-dir: /var/log/suricata/ids-ips
+default-rule-path: /var/lib/suricata/ids-ips/rules
+rule-files:
+  - suricata.rules
+  - /etc/suricata/ids-ips/local.rules
+
+# auto detecta el modo inline cuando se inicia con NFQUEUE (-q).
+stream:
+  inline: auto
+
+# Deja pasar tráfico si se llena la cola; se prioriza mantener Apache disponible.
+nfq:
+  mode: accept
+  fail-open: yes
+
+# La interfaz concreta se pasa desde opciones.conf al iniciar el servicio.
+af-packet:
+  - interface: default
+    threads: 1
+    cluster-id: 97
+    cluster-type: cluster_flow
+    defrag: yes
+    use-mmap: yes
+
+unix-command:
+  enabled: no
+
+stats:
+  enabled: yes
+  interval: 60
+
+# No se habilita el volcado de cuerpos HTTP ni capturas completas de paquetes.
+# Una alerta puede conservar metadatos de red; restringe el acceso a los logs.
+outputs:
+  - fast:
+      enabled: yes
+      filename: fast.log
+      append: yes
+  - eve-log:
+      enabled: yes
+      filetype: regular
+      filename: eve.json
+      types:
+        - alert:
+            payload: no
+            packet: no
+            metadata:
+              app-layer: false
+              flow: false
+        - drop:
+            alerts: yes
+            flows: start
+        - stats:
+            totals: yes
+            threads: no
+  - stats:
+      enabled: yes
+      filename: stats.log
+      append: yes
+
+logging:
+  default-log-level: notice
+  outputs:
+    - console:
+        enabled: yes

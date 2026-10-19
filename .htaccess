@@ -1,5 +1,12 @@
-RewriteEngine On
+Options -Indexes
 
+# Estos archivos nunca deben descargarse desde el navegador.
+<FilesMatch "(?i)^(\.|composer\.(json|lock)$|.*\.(sql|ini|log|ya?ml|bak|sh|md)$|Dockerfile$)">
+    Require all denied
+</FilesMatch>
+
+RewriteEngine On
+RewriteRule ^(?:app|vendor|database|demostracion|docs|suricata-almalinux|docker|backups|\.git)(?:/|$) - [F,L,NC]
 RewriteCond %{REQUEST_URI} !^/public/
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteRule ^ public/index.php [L,QSA]

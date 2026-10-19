@@ -1,107 +1,102 @@
 <?php
-declare(strict_types=1);
-$sessionLifetime = 60 * 60 * 24 * 30; // 30 Dias
 
+declare(strict_types=1);
+
+require_once dirname(__DIR__) . '/app/bootstrap.php';
+nuva_load_environment();
+nuva_security_headers();
+
+$method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
+if (!in_array($method, ['GET', 'POST', 'HEAD'], true)) {
+    http_response_code(405);
+    header('Allow: GET, POST, HEAD');
+    exit('Este método no está permitido.');
+}
+$photoForm = in_array($_GET['page'] ?? '', ['environment-create', 'environment'], true)
+    && str_starts_with($_SERVER['CONTENT_TYPE'] ?? '', 'multipart/form-data');
+$maximumBody = $photoForm ? 3145728 : 65536;
+if ((int) ($_SERVER['CONTENT_LENGTH'] ?? 0) > $maximumBody) {
+    nuva_security_event('request_too_large');
+    http_response_code(413);
+    exit($photoForm ? 'La foto y el formulario son demasiado grandes. Usa una imagen de hasta 2 MB.' : 'El formulario es demasiado grande. Reduce los detalles.');
+}
+$requestError = nuva_request_error($_GET, $_POST);
+if ($requestError !== '') {
+    nuva_security_event('invalid_request');
+    http_response_code(400);
+    exit($requestError);
+}
+
+// La cookie no puede leerse desde JavaScript y solo viaja por HTTPS cuando está habilitado.
+$sessionLifetime = 60 * 60 * 24 * 30;
+$secureCookie = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off';
+if (($_ENV['SESSION_SECURE_COOKIE'] ?? '') === '1') {
+    $secureCookie = true;
+}
+ini_set('session.use_strict_mode', '1');
+ini_set('session.use_only_cookies', '1');
 ini_set('session.gc_maxlifetime', (string) $sessionLifetime);
-/*
-    Establecer cookies de sesion
-*/
 session_set_cookie_params([
     'lifetime' => $sessionLifetime,
     'path' => '/',
-    /*
-        La condicion HTTPS sirve para evitar que la cookie viaje por conexiones no seguras (HTTP)
-    */
-    'secure' => isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off',
+    'secure' => $secureCookie,
     'httponly' => true,
     'samesite' => 'Lax',
 ]);
 session_start();
+$authenticated = !empty($_SESSION['authenticated']);
 
-$env = parse_ini_file(dirname(__DIR__) . '/.env', false, INI_SCANNER_RAW);
-
-if ($env === false) {
-    throw new RuntimeException('No se pudo cargar el archivo .env');
-}
-
-foreach ($env as $key => $value) {
-    $_ENV[$key] = $value;
-}
-
-$viewsPath = dirname(__DIR__) . '/app/Views';
-
-/*
-    Cargar y mostrar vista PHP.
-    Permite cargar datos.
-*/
-$render = static function (
-    string $view,
-    array $data = []
-) use ($viewsPath): void {
-    $file = $viewsPath . '/' . ltrim($view, '/') . '.php';
-
-    if (!is_file($file)) {
-        http_response_code(404);
-        echo 'View not found';
-        return;
-    }
-
-    extract($data, EXTR_SKIP);
-    require $file;
-};
-
-/*
-Para verificar si el usuario esta aunteticado.
-Si no esta aunteticado lo manda al home-public.
-*/
-$isAuthenticated = static function (): bool {
-    return !empty($_SESSION['authenticated']);
-};
-
+// Cada caso indica qué controlador atiende la página solicitada.
 $page = $_GET['page'] ?? 'index';
 $page = is_string($page) ? $page : 'index';
 
 switch ($page) {
     case 'index':
     case 'account':
-        require_once dirname(__DIR__) . '/app/Services/Database.php';
-        require_once dirname(__DIR__) . '/app/Models/Model.php';
-        require_once dirname(__DIR__) . '/app/Models/User.php';
-        require_once dirname(__DIR__) . '/app/Models/Role.php';
-        require_once dirname(__DIR__) . '/app/Models/Workspace.php';
-        require_once dirname(__DIR__) . '/app/Models/Tournament.php';
-        require_once dirname(__DIR__) . '/app/Controllers/HomeController.php';
-        (new \App\Controllers\HomeController())->handle($isAuthenticated(), $render);
+        $controller = new \App\Controllers\HomeController();
+        $controller->handle($authenticated, 'nuva_render_view');
+        break;
+
+    case 'environment-statistics':
+    case 'tournament-statistics':
+        $controller = new \App\Modules\Estadisticas\Controllers\StatisticsController();
+        $controller->handle($page, 'nuva_render_view');
         break;
 
     case 'guide':
-        $render('public/guide');
+        nuva_render_view('public/guide');
+        break;
+
+    case 'about':
+    case 'terms':
+    case 'copyright':
+        $controller = new \App\Modules\ConsultaPublica\Controllers\InformationController();
+        $controller->handle($page, 'nuva_render_view');
         break;
 
     case 'login':
-        $render('login');
+        nuva_render_view('login');
         break;
 
     case 'loginauth':
-        $render('login');
+        nuva_render_view('login');
         break;
     case 'logout':
     case 'profile':
     case 'settings':
-        require_once dirname(__DIR__) . '/app/Services/Database.php';
-        require_once dirname(__DIR__) . '/app/Models/Model.php';
-        require_once dirname(__DIR__) . '/app/Models/User.php';
-        require_once dirname(__DIR__) . '/app/Models/Role.php';
-        require_once dirname(__DIR__) . '/app/Models/Workspace.php';
-        require_once dirname(__DIR__) . '/app/Models/Tournament.php';
-        require_once dirname(__DIR__) . '/app/Controllers/AccountController.php';
-        (new \App\Controllers\AccountController())->handle($page, $render);
+        $controller = new \App\Controllers\AccountController();
+        $controller->handle($page, 'nuva_render_view');
         break;
 
     case 'my-environments':
     case 'my-tournaments':
-        $personalCollection=$page==='my-environments'?'environments':'tournaments';
-        $personalQuery=$_GET; $personalQuery['page']='profile'; $personalQuery['collection']=$personalCollection;
+        $personalCollection = 'tournaments';
+        if ($page === 'my-environments') {
+            $personalCollection = 'environments';
+        }
+        $personalQuery = $_GET;
+        $personalQuery['page'] = 'profile';
+        $personalQuery['collection'] = $personalCollection;
         header('Location: ?'.http_build_query($personalQuery).'#collections',true,303);
         break;
 
@@ -109,49 +104,26 @@ switch ($page) {
     case 'competitions':
     case 'competitions-all':
     case 'public-environment':
-        require_once dirname(__DIR__).'/app/Services/Database.php';
-        require_once dirname(__DIR__).'/app/Models/Model.php';
-        require_once dirname(__DIR__).'/app/Models/Role.php';
-        require_once dirname(__DIR__).'/app/Models/Workspace.php';
-        require_once dirname(__DIR__).'/app/Models/Tournament.php';
-        require_once dirname(__DIR__).'/app/Controllers/ExploreController.php';
-        (new \App\Controllers\ExploreController())->handle($page,$render);
+        $controller = new \App\Controllers\ExploreController();
+        $controller->handle($page, 'nuva_render_view');
         break;
 
     case 'tournament-create':
     case 'tournament':
     case 'tournament-edit':
-        require_once dirname(__DIR__) . '/app/Services/Database.php';
-        require_once dirname(__DIR__) . '/app/Models/Model.php';
-        require_once dirname(__DIR__) . '/app/Models/Role.php';
-        require_once dirname(__DIR__) . '/app/Models/Workspace.php';
-        require_once dirname(__DIR__) . '/app/Models/Tournament.php';
-        require_once dirname(__DIR__) . '/app/Controllers/TournamentController.php';
-        (new \App\Controllers\TournamentController())->handle($page, $render);
+        $controller = new \App\Controllers\TournamentController();
+        $controller->handle($page, 'nuva_render_view');
         break;
 
     case 'environment-create':
     case 'environment':
     case 'environment-invitation':
-        require_once dirname(__DIR__) . '/app/Services/Database.php';
-        require_once dirname(__DIR__) . '/app/Models/Model.php';
-        require_once dirname(__DIR__) . '/app/Models/User.php';
-        require_once dirname(__DIR__) . '/app/Models/Role.php';
-        require_once dirname(__DIR__) . '/app/Models/Workspace.php';
-        require_once dirname(__DIR__) . '/app/Models/Tournament.php';
-        require_once dirname(__DIR__) . '/app/Controllers/WorkspaceController.php';
         $controller = new \App\Controllers\WorkspaceController();
-        $controller->handle($page, $render);
+        $controller->handle($page, 'nuva_render_view');
         break;
 
     case 'google-callback':
         require_once dirname(__DIR__) . '/vendor/autoload.php';
-        require_once dirname(__DIR__) . '/app/Services/Database.php';
-        require_once dirname(__DIR__) . '/app/Services/GoogleAuthService.php';
-        require_once dirname(__DIR__) . '/app/Services/UserService.php';
-        require_once dirname(__DIR__) . '/app/Models/Model.php';
-        require_once dirname(__DIR__) . '/app/Models/User.php';
-        require_once dirname(__DIR__) . '/app/Controllers/GoogleAuthController.php';
 
         $controller = new \App\Controllers\GoogleAuthController();
         $controller->callback();
@@ -159,9 +131,8 @@ switch ($page) {
 
     case 'google-photo-refresh':
         require_once dirname(__DIR__) . '/vendor/autoload.php';
-        require_once dirname(__DIR__) . '/app/Services/GoogleAuthService.php';
-        require_once dirname(__DIR__) . '/app/Controllers/GoogleAuthController.php';
-        (new \App\Controllers\GoogleAuthController())->refreshPhoto();
+        $controller = new \App\Controllers\GoogleAuthController();
+        $controller->refreshPhoto();
         break;
 
         /*
@@ -169,14 +140,13 @@ switch ($page) {
         */
     case 'google-login':
         require_once dirname(__DIR__) . '/vendor/autoload.php';
-        require_once dirname(__DIR__) . '/app/Services/GoogleAuthService.php';
-        require_once dirname(__DIR__) . '/app/Controllers/GoogleAuthController.php';
 
-        if ($isAuthenticated()) {
+        if ($authenticated) {
             header('Location: ?page=profile', true, 303);
             break;
         }
-        (new \App\Controllers\GoogleAuthController())->login();
+        $controller = new \App\Controllers\GoogleAuthController();
+        $controller->login();
         break;
 
 

@@ -230,3 +230,58 @@ body.page-public {
         scroll-behavior: auto !important;
     }
 }
+/* Enlaces de ayuda y autoría compartidos por las páginas. */
+.site-footer {
+    width: min(100%, 106rem);
+    margin: 3.2rem auto 0;
+    padding: 2rem 0 .5rem;
+    border-top: .1rem solid var(--border);
+    color: var(--text-alternative);
+    font-size: 1.2rem;
+    line-height: 1.7;
+}
+
+.site-footer nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .8rem 2rem;
+}
+
+.site-footer a {
+    color: var(--text-alternative);
+    text-decoration: none;
+    text-underline-offset: .3rem;
+}
+
+.site-footer a:hover {
+    color: var(--accent-text);
+    text-decoration: underline;
+}
+
+.site-footer p {
+    margin: 1rem 0 0;
+}
+
+/* Regresar es una acción secundaria, con superficie y foco visibles. */
+.nuva-back {
+    justify-self: start;
+    display: inline-flex;
+    align-items: center;
+    gap: .8rem;
+    min-height: 4rem;
+    max-width: 100%;
+    padding: .8rem 1.3rem;
+    margin-bottom: 1.8rem;
+    border: .1rem solid var(--border);
+    border-radius: var(--radius-control);
+    background: var(--surface-1);
+    color: var(--text-alternative);
+    font-size: 1.3rem;
+    font-weight: 600;
+    text-decoration: none;
+    line-height: 1.5;
+    overflow-wrap: anywhere;
+    transition: border-color .18s, color .18s, background-color .18s;
+}
+.nuva-back::before { content: '←'; font-size: 1.7rem; color: var(--accent-text); }
+.nuva-back:hover { color: var(--text); border-color: var(--primary); background: var(--color-tag-bg); text-decoration: none; }

@@ -1,0 +1,25 @@
+# Tabla exclusiva de esta instalación. No borra ni reemplaza otras tablas.
+# Puertos web del host y publicados por Docker. Si cambian, adapta las listas.
+# También cubre el proxy local hacia un contenedor. No abre ninguno de los puertos.
+table inet suricata_local {
+    chain entrada_web {
+        type filter hook input priority 20; policy accept;
+        tcp dport { 80, 443, 8080 } counter queue num 100 bypass
+        # Respuesta del contenedor a una conexión originada en el propio host.
+        meta l4proto tcp ct direction reply ct status dnat ct original proto-dst { 80, 443, 8080 } counter queue num 100 bypass
+    }
+
+    chain salida_web {
+        type filter hook output priority 20; policy accept;
+        tcp sport { 80, 443, 8080 } counter queue num 100 bypass
+        # Conexión del proxy del host hacia un puerto publicado por Docker.
+        meta l4proto tcp ct direction original ct status dnat ct original proto-dst { 80, 443, 8080 } counter queue num 100 bypass
+    }
+
+    chain contenedores_web {
+        type filter hook forward priority 20; policy accept;
+        # Usa el puerto original, antes de que Docker lo traduzca (8080 -> 80).
+        # Abarca ida y respuesta de conexiones publicadas, sin encolar MariaDB.
+        meta l4proto tcp ct status dnat ct original proto-dst { 80, 443, 8080 } counter queue num 100 bypass
+    }
+}

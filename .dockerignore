@@ -1,0 +1,12 @@
+.git
+.env
+.env.*
+!.env.docker.example
+vendor
+docs
+backups
+*.log
+suricata-almalinux
+
+public/assets/uploads/environments/*
+!public/assets/uploads/environments/.htaccess

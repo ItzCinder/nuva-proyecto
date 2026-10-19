@@ -1,3 +1,11 @@
 /vendor/
 .env
 /public/assets/uploads/users/
+/public/assets/uploads/environments/*
+!/public/assets/uploads/environments/.htaccess
+
+.env.docker
+/backups/
+/docs/
+/demostracion/
+/database/

@@ -1,0 +1,7 @@
+# Ejemplo para el Apache ya instalado en el servidor.
+# Colocar dentro del VirtualHost HTTPS existente, con su certificado configurado.
+# Requiere mod_proxy y mod_proxy_http. El contenedor escucha solo en 127.0.0.1:8080.
+ProxyPreserveHost On
+ProxyPass / http://127.0.0.1:8080/
+ProxyPassReverse / http://127.0.0.1:8080/
+# En .env.docker: SESSION_SECURE_COOKIE=1 y GOOGLE_REDIRECT_URI con tu dominio HTTPS.

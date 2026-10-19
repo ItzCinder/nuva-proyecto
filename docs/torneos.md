@@ -43,7 +43,6 @@ El calendario marca el período del torneo y los días con encuentros programado
 
 Para una base existente, hacer una copia y aplicar `database/migrations/004_competition_engine.sql` después de las migraciones anteriores. El esquema `nuvabd.sql` incluye la ampliación para instalaciones nuevas. La migración no borra torneos ni resultados. Los encuentros heredados sin número de ronda requieren revisión antes de operar; Nuva impide duplicar su generación.
 
-Pruebas: `/opt/lampp/bin/php tests/competition.php`. Verifican las ligas, suizos y llaves con cantidades pares/impares, equipos, permisos, resultados, correcciones y transacciones. Crean datos temporales y los revierten al terminar.
 
 ## Documentos consultados
 
@@ -55,12 +54,12 @@ Se implementan generación, consulta, corrección auditada y clasificaciones (RF
 
 ## Demostraciones operativas
 
-`/opt/lampp/bin/php database/demo/cargar_competiciones.php --owner-id=ID` crea el entorno **Competiciones en acción · Demo**, ocho personas ficticias y seis torneos: un ejemplo en curso y otro finalizado de cada formato. Incluye equipos, empates, pases libres, tercer puesto, marcador de tiempo, calendarios y resultados. Se ejecuta una sola vez por cuenta y no modifica los torneos previos.
+`php demostracion/cargar.php --owner-id=ID` crea seis entornos y 54 torneos de los tres formatos, con ejemplos planificados, en curso y finalizados. Incluye equipos, empates, pases libres, tercer puesto, calendarios y resultados. No duplica el conjunto al repetirlo para la misma cuenta. El mismo comando completa los ejemplos antiguos reconocidos con actas, planteles, controles y estadísticas variadas. Consulta `demostracion/README.md`.
 
-El cargador general `database/demo/cargar_datos.php` conserva ejemplos sin encuentros para practicar la preparación e inscripción. Sus nuevos datos usan cantidades compatibles con los formatos.
+Los torneos planificados permiten practicar la preparación y generación de encuentros. Los antiguos cargadores de `database/demo` remiten al mismo cargador completo.
 
 ## Navegación de la plataforma
 
 **Explorar** reúne competiciones públicas, entornos con competiciones publicadas y la revisión de códigos de invitación. Las fichas públicas solo muestran descripción y torneos publicados. **Cuenta** contiene todos los entornos y torneos propios o a los que perteneces, con filtros. **Ajustes** permite cambiar el nombre, sincronizar la foto y cerrar sesión.
 
-Ejemplos adicionales: `database/demo/cargar_mas_competiciones.php --owner-id=ID` añade dos entornos y seis torneos con calendarios y resultados. Evita duplicarlos al volver a ejecutarlo.
+Todos los ejemplos actuales se gestionan desde la carpeta `demostracion`.

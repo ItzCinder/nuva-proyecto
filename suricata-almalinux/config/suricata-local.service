@@ -1,0 +1,23 @@
+[Unit]
+Description=Suricata local - IDS o IPS para el servidor web
+Wants=network-online.target
+After=network-online.target firewalld.service nftables.service
+Conflicts=suricata.service
+
+[Service]
+Type=simple
+ExecStartPre=/usr/local/libexec/suricata-local/ejecutar.sh validar
+ExecStart=/usr/local/libexec/suricata-local/ejecutar.sh iniciar
+ExecStartPost=/usr/local/libexec/suricata-local/cortafuegos.sh aplicar
+ExecStopPost=/usr/local/libexec/suricata-local/cortafuegos.sh retirar
+Restart=on-failure
+RestartSec=5
+TimeoutStartSec=180
+TimeoutStopSec=90
+UMask=0027
+NoNewPrivileges=yes
+ProtectHome=yes
+ProtectSystem=full
+
+[Install]
+WantedBy=multi-user.target

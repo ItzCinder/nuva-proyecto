@@ -1,0 +1,15 @@
+# Copia este archivo como opciones.conf y cambia los dos valores CAMBIAR.
+# Este archivo lo lee Bash: conserva las comillas y no escribas comandos.
+
+# ids: observa y avisa. ips: también bloquea reglas drop/reject.
+MODO="ids"
+
+# Interfaz que recibe las visitas al servidor. Consulta: ip -br address
+INTERFAZ="CAMBIAR"
+
+# IP o red del servidor, entre corchetes. Ejemplos:
+# RED_LOCAL="[192.168.1.20/32]"
+# RED_LOCAL="[192.168.1.0/24,2001:db8:1234::/64]"
+# Para Docker incluye sus subredes; para un proxy local incluye 127.0.0.0/8 y ::1/128.
+# Incluye la dirección pública si Apache recibe tráfico directamente en ella.
+RED_LOCAL="CAMBIAR"

@@ -1,0 +1,121 @@
+/* Encuentros y clasificaciones */
+.competition-rounds {
+    display: grid;
+    gap: 20px;
+    min-width: 0;
+}
+
+.competition-games {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 310px), 1fr));
+    gap: 16px;
+}
+
+.competition-game {
+    border: 1px solid var(--border-color, #30343e);
+    background: #111318;
+    border-radius: 12px;
+    padding: 18px;
+    min-width: 0;
+}
+
+.competition-game-label,
+.competition-rival {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 12px;
+}
+
+.competition-game-label {
+    color: #a5aebb;
+    font-size: 1.3rem;
+}
+
+.competition-rival strong {
+    overflow-wrap: anywhere;
+    font-weight: 500;
+}
+
+.competition-rival span {
+    flex-shrink: 0;
+    font-variant-numeric: tabular-nums;
+}
+
+.competition-rival.is-winner,
+.competition-decision {
+    color: #ff946c;
+}
+
+.competition-notes {
+    overflow-wrap: anywhere;
+    color: #b6bdc9;
+    font-size: 1.4rem;
+}
+
+.competition-game summary {
+    cursor: pointer;
+    padding: 12px 0;
+    color: #ff946c;
+}
+
+.competition-result-form {
+    padding-block: 12px;
+    border-top: 1px solid #30343e;
+}
+
+.competition-score-inputs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.competition-score-inputs>* {
+    min-width: 0;
+}
+
+.competition-actions {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-block: 16px;
+}
+
+.competition-table-wrap {
+    overflow-x: auto;
+}
+
+.competition-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-variant-numeric: tabular-nums;
+}
+
+.competition-table th,
+.competition-table td {
+    padding: 14px;
+    text-align: left;
+    border-bottom: 1px solid #30343e;
+}
+
+.competition-table thead {
+    color: #a5aebb;
+    font-size: 1.3rem;
+}
+
+.competition-bracket {
+    display: flex;
+    overflow-x: auto;
+    align-items: flex-start;
+    padding-bottom: 12px;
+}
+
+.competition-bracket .competition-round {
+    flex: 0 0 min(360px, 90%);
+}
+
+.competition-bracket .competition-games {
+    grid-template-columns: 1fr;
+}
+

@@ -1,0 +1,131 @@
+.logo__img {
+    width: 13.5rem;
+}
+
+.logo__container {
+    display: inline-flex;
+    align-items: center;
+    flex: 0 0 auto;
+}
+
+.header {
+    background-color: var(--bg-secondary);
+    padding: 1.2rem clamp(1.6rem, 3vw, 4rem);
+    display: flex;
+    justify-content: space-between;
+    border-bottom: .1rem var(--border) solid;
+    min-height: var(--header-height);
+    flex-shrink: 0;
+    align-items: center;
+    box-sizing: border-box;
+    position: relative;
+    z-index: 11;
+}
+
+.header__btn {
+    background: var(--control-bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-control);
+    width: 4rem;
+    height: 4rem;
+}
+
+.header__btn--icon {
+    color: var(--icon-color);
+    width: 2.5rem;
+    height: 2.5rem;
+    display: block;
+}
+
+.header__public-nav {
+    display: flex;
+    align-items: center;
+    gap: clamp(1.2rem, 2vw, 3rem);
+    margin-left: auto;
+}
+
+.header__public-nav a {
+    padding: .8rem .2rem;
+    color: var(--text-alternative);
+    font-weight: 600;
+    text-decoration: none;
+    text-underline-offset: .4rem;
+    white-space: nowrap;
+}
+
+.header__public-nav a:hover,
+.header__public-nav a[aria-current="page"] {
+    color: var(--accent-text);
+}
+
+.header__actions {
+    display: flex;
+    align-items: center;
+    margin-left: clamp(1.4rem, 2.5vw, 4rem);
+}
+
+.header__login {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: .8rem;
+    min-height: 4rem;
+    padding: .8rem 1.5rem;
+    border: .1rem solid rgba(250, 70, 22, .5);
+    border-radius: var(--radius-control);
+    color: var(--text);
+    font-weight: 700;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: background-color .2s, border-color .2s;
+}
+
+.header__login svg {
+    width: 1.7rem;
+    height: 1.7rem;
+    color: var(--accent-text);
+}
+
+.header__login:hover {
+    border-color: var(--primary);
+    background: var(--color-tag-bg);
+    color: var(--text);
+}
+
+@media (max-width: 650px) {
+    .header:has(.header__public-nav) {
+        flex-wrap: wrap;
+        gap: .6rem 1rem;
+        padding-top: 1rem;
+        padding-bottom: .6rem;
+    }
+
+    .header__public-nav {
+        order: 3;
+        width: 100%;
+        justify-content: space-between;
+        gap: 1.5rem;
+        margin-left: 0;
+        border-top: .1rem solid var(--border);
+    }
+
+    .header__public-nav a {
+        padding: .8rem .2rem;
+        font-size: 1.25rem;
+    }
+
+    .header__actions {
+        margin-left: auto;
+    }
+
+    .header__login {
+        min-height: 3.7rem;
+        padding: .6rem 1rem;
+        font-size: 1.25rem;
+    }
+
+    .header__login svg {
+        width: 1.5rem;
+        height: 1.5rem;
+    }
+}
