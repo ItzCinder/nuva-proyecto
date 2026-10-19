@@ -76,6 +76,7 @@ class Physics
 
         return $number;
     }
+
     private static function label(string $key): string
     {
         if (str_starts_with($key, 'u_')) {
@@ -95,6 +96,7 @@ class Physics
             'work_distance' => 'desplazamiento del trabajo'
         ][$key] ?? str_replace('_', ' ', $key);
     }
+
     private static function positive(array $input, string $key): float
     {
         $number = self::number($input, $key, true, 0);
@@ -104,35 +106,49 @@ class Physics
 
         return $number;
     }
+
     public static function calculate(array $measurements, array $selectedTemplates): array
     {
         $inputs = [];
         $results = [];
         $notes = [];
-        $independent = ($measurements['independent_inputs'] ?? '') === '1';
+        $inputsAreIndependent = ($measurements['independent_inputs'] ?? '') === '1';
         $acceleration = null;
         $accelerationUncertainty = null;
         $finalSpeed = null;
         $finalSpeedUncertainty = null;
-        $force = null;
-        $uForce = null;
+        $forceUncertainty = null;
         $mass = null;
         $massUncertainty = null;
-        $estimateAcceleration = in_array('motion', $selectedTemplates, true) && ($measurements['mrua'] ?? '') === '1';
+        $segmentDistance = null;
+        $segmentTime = null;
+        $segmentDistanceUncertainty = null;
+        $segmentTimeUncertainty = null;
+        $calculateMotion = in_array('motion', $selectedTemplates, true);
+        $calculateDynamics = in_array('dynamics', $selectedTemplates, true);
         $calculateEnergy = in_array('energy', $selectedTemplates, true);
-        if (in_array('motion', $selectedTemplates, true)) {
+        $estimateAcceleration = $calculateMotion && ($measurements['mrua'] ?? '') === '1';
+        if ($calculateMotion) {
             $distance = self::readPositive($measurements, $inputs, 'distance');
             $time = self::readPositive($measurements, $inputs, 'time');
             $distanceUncertainty = self::readUncertainty($measurements, $inputs, 'distance');
             $timeUncertainty = self::readUncertainty($measurements, $inputs, 'time');
-            $value = $distance / $time;
-            $uncertainty = $independent && $distanceUncertainty !== null && $timeUncertainty !== null ? abs($value) * sqrt(($distanceUncertainty / $distance) ** 2 + ($timeUncertainty / $time) ** 2) : null;
-            self::storeResult($results, 'speed', $value, $uncertainty);
+            $averageSpeed = $distance / $time;
+            $averageSpeedUncertainty = null;
+            if ($inputsAreIndependent && $distanceUncertainty !== null && $timeUncertainty !== null) {
+                $averageSpeedUncertainty = abs($averageSpeed) * sqrt(
+                    ($distanceUncertainty / $distance) ** 2
+                    + ($timeUncertainty / $time) ** 2
+                );
+            }
+            self::storeResult($results, 'speed', $averageSpeed, $averageSpeedUncertainty);
         }
 
         $accelerationSource = ($measurements['acceleration_source'] ?? 'model') === 'measured' ? 'measured' : 'model';
         $speedSource = ($measurements['speed_source'] ?? 'model') === 'measured' ? 'measured' : 'model';
-        $estimateFromDistanceAndTime = $estimateAcceleration || (in_array('dynamics', $selectedTemplates, true) && $accelerationSource === 'model') || ($calculateEnergy && $speedSource === 'model');
+        $estimateFromDistanceAndTime = $estimateAcceleration
+            || ($calculateDynamics && $accelerationSource === 'model')
+            || ($calculateEnergy && $speedSource === 'model');
         if ($estimateFromDistanceAndTime) {
             if (($measurements['from_rest'] ?? '') !== '1' || ($measurements['constant_acceleration'] ?? '') !== '1') {
                 throw new \InvalidArgumentException('Para estimar con distancia y tiempo, confirma que empezó quieto, fue en línea recta y ganó rapidez de forma aproximadamente uniforme.');
@@ -148,12 +164,18 @@ class Physics
 
             $acceleration = 2 * $segmentDistance / ($segmentTime * $segmentTime);
             $finalSpeed = 2 * $segmentDistance / $segmentTime;
-            if ($independent && $segmentDistanceUncertainty !== null && $segmentTimeUncertainty !== null) {
-                $accelerationUncertainty = abs($acceleration) * sqrt(($segmentDistanceUncertainty / $segmentDistance) ** 2 + (2 * $segmentTimeUncertainty / $segmentTime) ** 2);
-                $finalSpeedUncertainty = abs($finalSpeed) * sqrt(($segmentDistanceUncertainty / $segmentDistance) ** 2 + ($segmentTimeUncertainty / $segmentTime) ** 2);
+            if ($inputsAreIndependent && $segmentDistanceUncertainty !== null && $segmentTimeUncertainty !== null) {
+                $accelerationUncertainty = abs($acceleration) * sqrt(
+                    ($segmentDistanceUncertainty / $segmentDistance) ** 2
+                    + (2 * $segmentTimeUncertainty / $segmentTime) ** 2
+                );
+                $finalSpeedUncertainty = abs($finalSpeed) * sqrt(
+                    ($segmentDistanceUncertainty / $segmentDistance) ** 2
+                    + ($segmentTimeUncertainty / $segmentTime) ** 2
+                );
             }
 
-            if (in_array('motion', $selectedTemplates, true)) {
+            if ($calculateMotion) {
                 self::storeResult($results, 'acceleration', $acceleration, $accelerationUncertainty, true);
                 self::storeResult($results, 'final_speed', $finalSpeed, $finalSpeedUncertainty, true);
             }
@@ -161,23 +183,26 @@ class Physics
             $notes[] = 'Estimación MRUA: trayectoria recta, salida desde el reposo y aceleración constante. Conviene contrastarla con marcas intermedias.';
         }
 
-        if (in_array('dynamics', $selectedTemplates, true) || $calculateEnergy) {
+        if ($calculateDynamics || $calculateEnergy) {
             $mass = self::readPositive($measurements, $inputs, 'mass');
             $massUncertainty = self::readUncertainty($measurements, $inputs, 'mass');
         }
 
-        if (in_array('dynamics', $selectedTemplates, true)) {
+        if ($calculateDynamics) {
             if ($accelerationSource === 'measured') {
                 $acceleration = self::readInput($measurements, $inputs, 'acceleration', true);
                 $accelerationUncertainty = self::readUncertainty($measurements, $inputs, 'acceleration');
             }
 
             $force = $mass * $acceleration;
-            if ($independent && $massUncertainty !== null && $accelerationUncertainty !== null) {
-                $uForce = sqrt(($acceleration * $massUncertainty) ** 2 + ($mass * $accelerationUncertainty) ** 2);
+            if ($inputsAreIndependent && $massUncertainty !== null && $accelerationUncertainty !== null) {
+                $forceUncertainty = sqrt(
+                    ($acceleration * $massUncertainty) ** 2
+                    + ($mass * $accelerationUncertainty) ** 2
+                );
             }
 
-            self::storeResult($results, 'force', $force, $uForce, true);
+            self::storeResult($results, 'force', $force, $forceUncertainty, true);
         }
 
         if ($calculateEnergy) {
@@ -191,54 +216,47 @@ class Physics
                 $initialSpeedUncertainty = 0.0;
             }
 
-            $kineticEnergy = .5 * $mass * $finalSpeed * $finalSpeed;
-            $energyChange = .5 * $mass * ($finalSpeed * $finalSpeed - $initialSpeed * $initialSpeed);
+            $kineticEnergy = 0.5 * $mass * $finalSpeed * $finalSpeed;
+            $energyChange = 0.5 * $mass * ($finalSpeed * $finalSpeed - $initialSpeed * $initialSpeed);
             $kineticUncertainty = null;
             $energyChangeUncertainty = null;
-            if ($independent && $massUncertainty !== null && $finalSpeedUncertainty !== null) {
-                $kineticUncertainty = sqrt((.5 * $finalSpeed * $finalSpeed * $massUncertainty) ** 2 + ($mass * $finalSpeed * $finalSpeedUncertainty) ** 2);
+            if ($inputsAreIndependent && $massUncertainty !== null && $finalSpeedUncertainty !== null) {
+                $kineticUncertainty = sqrt(
+                    (0.5 * $finalSpeed * $finalSpeed * $massUncertainty) ** 2
+                    + ($mass * $finalSpeed * $finalSpeedUncertainty) ** 2
+                );
                 if ($initialSpeedUncertainty !== null) {
-                    $energyChangeUncertainty = sqrt((.5 * ($finalSpeed * $finalSpeed - $initialSpeed * $initialSpeed) * $massUncertainty) ** 2 + ($mass * $finalSpeed * $finalSpeedUncertainty) ** 2 + ($mass * $initialSpeed * $initialSpeedUncertainty) ** 2);
+                    $energyChangeUncertainty = sqrt(
+                        (0.5 * ($finalSpeed * $finalSpeed - $initialSpeed * $initialSpeed) * $massUncertainty) ** 2
+                        + ($mass * $finalSpeed * $finalSpeedUncertainty) ** 2
+                        + ($mass * $initialSpeed * $initialSpeedUncertainty) ** 2
+                    );
                 }
             }
 
             self::storeResult($results, 'kinetic', $kineticEnergy, $kineticUncertainty, $speedSource === 'model');
             self::storeResult($results, 'delta_energy', $energyChange, $energyChangeUncertainty, $speedSource === 'model');
             if (($measurements['work_mode'] ?? '') === 'model') {
-                if (!$estimateFromDistanceAndTime || $speedSource !== 'model' || (in_array('dynamics', $selectedTemplates, true) && $accelerationSource !== 'model')) {
+                $hasInitialSegment = $segmentDistance !== null && $segmentTime !== null;
+                $usesMeasuredAcceleration = $calculateDynamics && $accelerationSource === 'measured';
+                if (!$hasInitialSegment || $speedSource !== 'model' || $usesMeasuredAcceleration) {
                     throw new \InvalidArgumentException('Para estimar el trabajo, usa el mismo recorrido desde la salida quieta. Si tienes medidas de un instrumento, elige la opción de fuerza medida.');
                 }
 
                 $work = 2 * $mass * $segmentDistance * $segmentDistance / ($segmentTime * $segmentTime);
                 $workUncertainty = null;
-                if ($independent && $massUncertainty !== null && $segmentDistanceUncertainty !== null && $segmentTimeUncertainty !== null) {
-                    $workUncertainty = abs($work) * sqrt(($massUncertainty / $mass) ** 2 + (2 * $segmentDistanceUncertainty / $segmentDistance) ** 2 + (2 * $segmentTimeUncertainty / $segmentTime) ** 2);
+                if ($inputsAreIndependent && $massUncertainty !== null && $segmentDistanceUncertainty !== null && $segmentTimeUncertainty !== null) {
+                    $workUncertainty = abs($work) * sqrt(
+                        ($massUncertainty / $mass) ** 2
+                        + (2 * $segmentDistanceUncertainty / $segmentDistance) ** 2
+                        + (2 * $segmentTimeUncertainty / $segmentTime) ** 2
+                    );
                 }
 
                 self::storeResult($results, 'work', $work, $workUncertainty, true);
                 $notes[] = 'Trabajo y cambio de energía se calculan desde los mismos datos: su coincidencia comprueba las ecuaciones, no valida por sí sola el modelo con un experimento independiente.';
             } elseif (($measurements['work_mode'] ?? '') === 'measured') {
-                if (($measurements['constant_force'] ?? '') !== '1') {
-                    throw new \InvalidArgumentException('Para calcular trabajo confirma que la fuerza neta puede considerarse constante durante el desplazamiento.');
-                }
-
-                $measuredForce = self::readInput($measurements, $inputs, 'force', true);
-                $workDistance = self::readInput($measurements, $inputs, 'work_distance', true, 0);
-                $angle = self::readInput($measurements, $inputs, 'angle', true);
-                if (abs($angle) > 360) {
-                    throw new \InvalidArgumentException('El ángulo debe estar entre −360° y 360°.');
-                }
-
-                $forceUncertainty = self::readUncertainty($measurements, $inputs, 'force');
-                $workDistanceUncertainty = self::readUncertainty($measurements, $inputs, 'work_distance');
-                $angleUncertainty = self::readUncertainty($measurements, $inputs, 'angle');
-                $angleInRadians = deg2rad($angle);
-                $workUncertainty = null;
-                if ($independent && $forceUncertainty !== null && $workDistanceUncertainty !== null && $angleUncertainty !== null) {
-                    $workUncertainty = sqrt(($workDistance * cos($angleInRadians) * $forceUncertainty) ** 2 + ($measuredForce * cos($angleInRadians) * $workDistanceUncertainty) ** 2 + ($measuredForce * $workDistance * sin($angleInRadians) * deg2rad($angleUncertainty)) ** 2);
-                }
-
-                self::storeResult($results, 'work', $measuredForce * $workDistance * cos($angleInRadians), $workUncertainty, true);
+                self::calculateMeasuredWork($measurements, $inputs, $results, $inputsAreIndependent);
             }
 
             $notes[] = 'La energía describe traslación del cuerpo como masa puntual; no mide consumo metabólico ni el movimiento de cada parte del cuerpo.';
@@ -253,7 +271,7 @@ class Physics
             'speed_source' => $speedSource,
             'work_mode' => in_array($measurements['work_mode'] ?? '', ['model', 'measured'], true) ? $measurements['work_mode'] : 'none'
         ];
-        if (!$independent) {
+        if (!$inputsAreIndependent) {
             $notes[] = 'No se propagó incertidumbre: no se declararon entradas independientes. Esto no significa incertidumbre cero.';
         } else {
             foreach ($results as $result) {
@@ -270,6 +288,39 @@ class Physics
             'outputs' => $results,
             'notes' => $notes
         ];
+    }
+
+    private static function calculateMeasuredWork(
+        array $measurements,
+        array &$inputs,
+        array &$results,
+        bool $inputsAreIndependent
+    ): void {
+        if (($measurements['constant_force'] ?? '') !== '1') {
+            throw new \InvalidArgumentException('Para calcular trabajo confirma que la fuerza neta puede considerarse constante durante el desplazamiento.');
+        }
+
+        $measuredForce = self::readInput($measurements, $inputs, 'force', true);
+        $workDistance = self::readInput($measurements, $inputs, 'work_distance', true, 0);
+        $angle = self::readInput($measurements, $inputs, 'angle', true);
+        if (abs($angle) > 360) {
+            throw new \InvalidArgumentException('El ángulo debe estar entre −360° y 360°.');
+        }
+
+        $forceUncertainty = self::readUncertainty($measurements, $inputs, 'force');
+        $workDistanceUncertainty = self::readUncertainty($measurements, $inputs, 'work_distance');
+        $angleUncertainty = self::readUncertainty($measurements, $inputs, 'angle');
+        $angleInRadians = deg2rad($angle);
+        $workUncertainty = null;
+        if ($inputsAreIndependent && $forceUncertainty !== null && $workDistanceUncertainty !== null && $angleUncertainty !== null) {
+            $workUncertainty = sqrt(
+                ($workDistance * cos($angleInRadians) * $forceUncertainty) ** 2
+                + ($measuredForce * cos($angleInRadians) * $workDistanceUncertainty) ** 2
+                + ($measuredForce * $workDistance * sin($angleInRadians) * deg2rad($angleUncertainty)) ** 2
+            );
+        }
+
+        self::storeResult($results, 'work', $measuredForce * $workDistance * cos($angleInRadians), $workUncertainty, true);
     }
 
     private static function readInput(array $measurements, array &$inputs, string $key, bool $required = false, ?float $minimum = null): ?float
