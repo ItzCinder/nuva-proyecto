@@ -13,7 +13,7 @@ $searchQuery = is_string($_GET['q'] ?? null) ? trim($_GET['q']) : '';
         </script>
         <script src="/public/shared/js/layout.js?v=3" defer>
         </script>
-        <?php foreach (['bootstrap.min.css','global.css?v=5','components/header.css?v=4','components/tabbar.css?v=4','public/competitions.css?v=5','components/collection.css?v=4','environments.css?v=6','explore.css?v=1'] as $css): ?>
+        <?php foreach (['bootstrap.min.css','global.css?v=5','components/header.css?v=4','components/tabbar.css?v=4','public/competitions.css?v=6','components/collection.css?v=4','environments.css?v=7','explore.css?v=1'] as $css): ?>
         <link rel="stylesheet" href="<?= htmlspecialchars(nuva_asset('/public/css/' . $css), ENT_QUOTES, 'UTF-8') ?>">
         <?php endforeach; ?>
     </head>
@@ -37,7 +37,7 @@ $searchQuery = is_string($_GET['q'] ?? null) ? trim($_GET['q']) : '';
                 <header class="explore-heading">
                     <p class="environment-eyebrow">DESCUBRE NUVA</p>
                     <h1>Explorar</h1>
-                    <p class="environment-muted">Encuentra comunidades y competiciones públicas. Tus entornos y torneos están en Cuenta.</p>
+                    <p class="environment-muted">Busca entornos y torneos públicos. Para ver los tuyos, entra en Cuenta.</p>
                     <a class="nuva-anchor" href="#invitation">Tengo un código de invitación →</a>
                 </header>
                 <nav class="collection-tabs" aria-label="Explorar la plataforma">
@@ -66,7 +66,7 @@ $searchQuery = is_string($_GET['q'] ?? null) ? trim($_GET['q']) : '';
                     } ?>
                 <section>
                     <h2 class="section-title">Entornos públicos</h2>
-                    <p class="environment-muted">Comunidades con al menos una competición publicada.</p>
+                    <p class="environment-muted">Entornos con al menos un torneo público.</p>
                     <form method="get" class="environment-search">
                         <input type="hidden" name="page" value="explore">
                         <input type="hidden" name="collection" value="environments">
@@ -88,7 +88,7 @@ $searchQuery = is_string($_GET['q'] ?? null) ? trim($_GET['q']) : '';
                                 <span class="nuva-badge environment-role">Público</span>
                             </div>
                             <h2><?= nuva_escape($item['name']) ?></h2>
-                            <p class="environment-muted"><?= nuva_escape($item['description'] ?: 'Una comunidad de competiciones en Nuva.') ?></p>
+                            <p class="environment-muted"><?= nuva_escape($item['description'] ?: 'Torneos y miembros de este entorno.') ?></p>
                             <div class="environment-card__bottom">
                                 <span class="environment-muted"><?= (int)$item['public_count'] ?> competiciones públicas</span>
                                 <span class="environment-card__arrow" aria-hidden="true">→</span>
@@ -104,7 +104,7 @@ $searchQuery = is_string($_GET['q'] ?? null) ? trim($_GET['q']) : '';
                 <section class="nuva-card explore-invitation" id="invitation">
                     <div>
                         <h2 class="section-title">Unirte por código</h2>
-                        <p class="environment-muted">¿Te invitaron a un entorno? Revisa el código y confirma tu incorporación<?= empty($_SESSION['authenticated']) ? ' al iniciar sesión' : '' ?>.</p>
+                        <p class="environment-muted">¿Te invitaron a un entorno? Escribe el código y acepta la invitación<?= empty($_SESSION['authenticated']) ? ' al iniciar sesión' : '' ?>.</p>
                     </div>
                     <form method="get" class="environment-search">
                         <input type="hidden" name="page" value="environment-invitation">

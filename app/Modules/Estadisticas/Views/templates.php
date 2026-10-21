@@ -2,7 +2,7 @@
 
 ?>
 <details class="nuva-card tournament-panel">
-    <summary class="section-title">Ayuda: ¿para qué sirve cada opción?</summary>
+    <summary class="section-title">Ayuda con las plantillas</summary>
     <p class="environment-muted">No necesitas conocer las fórmulas para cargar una prueba. Elige lo que quieres saber y sigue las indicaciones.</p>
     <div class="statistics-guides">
         <?php foreach (Physics::TEMPLATES as $code => $template): ?>

@@ -3,7 +3,7 @@
 ?>
 <section class="nuva-card tournament-panel">
     <h2 class="section-title">Disponibles para los torneos</h2>
-    <p class="environment-muted">Elige qué podrán usar los torneos de este entorno. Si desactivas una opción, lo que ya se guardó se conserva. En los torneos existentes tendrás que elegirla también desde su pestaña Estadísticas.</p>
+    <p class="environment-muted">Activa las estadísticas que podrán usar los torneos del entorno. Después, elígelas en la pestaña Estadísticas de cada torneo. Desactivarlas no borra los datos guardados.</p>
     <form method="post" class="environment-form">
         <?php nuva_csrf_field(); ?>
         <input type="hidden" name="action" value="stat_environment">
@@ -16,12 +16,12 @@
         <label class="environment-check">
             <input name="manual[]" type="checkbox" value="<?= (int)$definition['id'] ?>" <?= in_array((string)$definition['id'], array_map('strval', $catalogue['manual']), true) ? 'checked' : '' ?>> <?= nuva_escape($definition['name']) ?> · <?= $definition['target'] === 'team' ? 'Equipos' : 'Personas' ?> · <?= nuva_escape($definition['unit'] ?: 'Sin unidad') ?> · <?= nuva_escape($rules[$definition['rule']]) ?></label>
         <?php endforeach; ?>
-        <button class="nuva-btn">Guardar opciones disponibles</button>
+        <button class="nuva-btn">Guardar cambios</button>
     </form>
 </section>
 <section class="nuva-card tournament-panel">
     <h2 class="section-title">Crear una estadística manual</h2>
-    <p class="environment-muted">Útil para asistencias, faltas, puntuaciones u otros valores de tu disciplina. Tú escribes los valores y Nuva los reúne como elijas: por ejemplo, sumar los puntos o mostrar el mejor tiempo.</p>
+    <p class="environment-muted">Puedes registrar asistencias, faltas, puntos o tiempos. Elige si quieres sumar los valores, calcular un promedio o mostrar el mayor, el menor o el último.</p>
     <form method="post" class="environment-form">
         <?php nuva_csrf_field(); ?>
         <input type="hidden" name="action" value="stat_definition">
@@ -51,6 +51,6 @@
             </label>
         </div>
         <button class="environment-button">Crear estadística</button>
-        <p class="environment-muted">Después de crearla, habilítala en el catálogo y selecciónala en cada torneo.</p>
+        <p class="environment-muted">Después de crearla, actívala en las opciones del entorno y en cada torneo donde quieras usarla.</p>
     </form>
 </section>

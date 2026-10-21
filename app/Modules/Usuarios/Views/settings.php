@@ -52,12 +52,12 @@
                     </div>
                     <div class="profile-settings__panel">
                         <h2>Foto de Google</h2>
-                        <p><?= $user->getPictureUrl() ? 'Tu foto está vinculada a Google. Si la cambias allí, puedes sincronizarla de nuevo.' : 'Aún no hay una foto de Google sincronizada con este perfil.' ?></p>
+                        <p><?= $user->getPictureUrl() ? 'Usamos tu foto de Google. Si la cambiaste, pulsa el botón para actualizarla aquí.' : 'Todavía no se cargó tu foto de Google. Puedes intentar actualizarla.' ?></p>
                         <form method="post" action="?page=google-photo-refresh" class="profile-settings__form">
                             <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($_SESSION['csrf_token'], ENT_QUOTES, 'UTF-8') ?>">
                             <button class="profile-settings__secondary" type="submit">
                                 <i data-lucide="refresh-cw" aria-hidden="true">
-                                </i> Sincronizar foto de Google</button>
+                                </i> Actualizar foto de Google</button>
                         </form>
                     </div>
                 </div>

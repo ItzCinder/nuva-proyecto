@@ -1,8 +1,8 @@
 <details class="nuva-card tournament-panel" open>
     <summary class="section-title">Elegir estadísticas de este torneo</summary>
-    <p class="environment-muted">Elige qué se puede registrar y qué se puede ver. Puedes dejar de recibir datos y seguir mostrando las pruebas que ya guardaste.</p>
+    <p class="environment-muted">Elige qué estadísticas se pueden cargar y cuáles se muestran. Si desactivas la carga, los datos guardados se conservan.</p>
     <?php if ($tournament['published']): ?>
-    <p class="environment-notice">Este torneo es público. Las opciones visibles podrán consultarse sin iniciar sesión, incluidas las mediciones y sus detalles.</p>
+    <p class="environment-notice">Este torneo es público. Cualquier persona podrá ver las estadísticas marcadas en Mostrar, incluidas sus mediciones y detalles.</p>
     <?php endif; ?>
     <form method="post" class="environment-form">
         <?php nuva_csrf_field(); ?>
@@ -36,6 +36,6 @@
                 </tbody>
             </table>
         </div>
-        <button class="environment-button">Guardar selección del torneo</button>
+        <button class="environment-button">Guardar cambios</button>
     </form>
 </details>

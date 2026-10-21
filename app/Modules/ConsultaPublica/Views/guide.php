@@ -23,8 +23,8 @@
             <a class="nuva-anchor guide-back nuva-back" href="?page=account">Volver al inicio</a>
             <section class="guide-hero" aria-labelledby="guide-title">
                 <span class="guide-eyebrow">GUÍA DE NUVA</span>
-                <h1 id="guide-title">De una comunidad a su primer torneo</h1>
-                <p>Aprende a crear un entorno, organizar torneos y consultar encuentros, resultados y estadísticas. Las pruebas físicas se explican paso a paso, con ejemplos y sin necesitar conocimientos de física.</p>
+                <h1 id="guide-title">Cómo usar Nuva</h1>
+                <p>Aquí encontrarás cómo crear un entorno, preparar un torneo y cargar resultados. También hay ayuda y ejemplos para usar las estadísticas.</p>
                 <div class="guide-actions">
                     <a class="nuva-btn" href="?page=environment-create">Crear un entorno</a>
                     <a class="guide-secondary" href="?page=competitions-all">Explorar torneos públicos</a>
@@ -101,7 +101,7 @@
                 </div>
                 <p class="guide-note">
                     <i data-lucide="info" aria-hidden="true">
-                    </i> Entrar a un entorno no te inscribe automáticamente en sus torneos. Las invitaciones incorporan al entorno como participante; un administrador puede cambiar el rol después.</p>
+                    </i> Entrar a un entorno no te inscribe automáticamente en sus torneos. Al aceptar una invitación entras como participante. Un administrador puede cambiar tu rol después.</p>
             </section>
             <section class="guide-section" id="torneos" aria-labelledby="tournament-title">
                 <div class="guide-section__heading">
@@ -119,7 +119,7 @@
                         <li>
                             <strong>Formato:</strong> Liga, Sistema Suizo o Eliminación Directa, según los módulos activos del entorno.</li>
                         <li>
-                            <strong>Modalidad y cupo:</strong> competición individual o por equipos; en equipos también defines integrantes por plantilla.</li>
+                            <strong>Modalidad y cupo:</strong> competición individual o por equipos; en equipos también eliges cuántas personas admite cada uno.</li>
                         <li>
                             <strong>Fechas y visibilidad:</strong> inicio y fin del torneo, estado y publicación para visitantes.</li>
                         <li>
@@ -137,7 +137,7 @@
                     <span>04</span>
                     <div>
                         <h2 id="formats-title">Formatos de competición</h2>
-                        <p>La configuración y la vista interior cambian según el formato elegido.</p>
+                        <p>Cada formato tiene sus propias reglas y forma de organizar los encuentros.</p>
                     </div>
                 </div>
                 <div class="guide-grid guide-grid--formats">

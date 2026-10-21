@@ -16,7 +16,7 @@ use app\Models\Role;
         <link rel="stylesheet" href="/public/css/global.css?v=5">
         <link rel="stylesheet" href="/public/shared/css/header.css?v=4">
         <link rel="stylesheet" href="/public/shared/css/tabbar.css?v=4">
-        <link rel="stylesheet" href="/public/modules/Administracion/css/environments.css?v=6">
+        <link rel="stylesheet" href="/public/modules/Administracion/css/environments.css?v=7">
         <link rel="stylesheet" href="/public/modules/Torneos/css/tournaments.css?v=4">
         <script src="/public/shared/js/layout.js?v=3" defer>
         </script>

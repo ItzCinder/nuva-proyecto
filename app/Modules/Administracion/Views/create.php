@@ -3,7 +3,7 @@
     <div>
         <p class="environment-eyebrow">NUEVA COMUNIDAD</p>
         <h1>Crear entorno</h1>
-        <p class="environment-muted">Un espacio propio para tu club, institución o grupo de competiciones.</p>
+        <p class="environment-muted">Crea un entorno para reunir a tu club, institución o grupo.</p>
     </div>
 </div>
 <div class="environment-columns">
@@ -23,6 +23,6 @@
         </span>
         <h2 class="section-title">Serás el dueño del entorno</h2>
         <p class="environment-muted">Podrás configurar el entorno, invitar miembros y asignar administradores generales.</p>
-        <p class="environment-muted">Cada miembro tendrá un rol dentro de este espacio. Sus permisos en otros entornos se mantienen independientes.</p>
+        <p class="environment-muted">Cada miembro tendrá un rol en este entorno, aunque tenga otro rol en los demás.</p>
     </aside>
 </div>

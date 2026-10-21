@@ -2,7 +2,7 @@
     <div class="comp__card-top">
         <span class="comp__card-logo">
             <?php if (!empty($item['picture'])): ?>
-            <img src="<?= nuva_escape($item['picture']) ?>" alt="" loading="lazy" decoding="async">
+            <img src="<?= nuva_escape($item['picture']) ?>" alt="" width="44" height="44" loading="lazy" decoding="async">
             <?php else: ?>
             <i data-lucide="<?= nuva_escape($item['icon']) ?>" aria-hidden="true">
             </i>

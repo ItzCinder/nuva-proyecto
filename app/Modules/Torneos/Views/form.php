@@ -24,7 +24,7 @@ $manager = $workspace['role_name'] !== Role::ORGANIZER;
 <header class="tournament-heading">
     <p class="environment-eyebrow"><?= nuva_escape($workspace['name']) ?></p>
     <h1><?= $isEdit ? 'Configurar torneo' : 'Crear torneo' ?></h1>
-    <p class="environment-muted">Define los datos y reglas de la competición. Podrás preparar sus inscripciones después de guardarla.</p>
+    <p class="environment-muted">Completa los datos y las reglas del torneo. Después de guardarlo podrás inscribir participantes.</p>
 </header>
 <?php if (!$modules): ?>
 <p class="environment-notice environment-notice--error">Este entorno no tiene módulos habilitados. Activa al menos uno desde la configuración del entorno.</p>
@@ -63,7 +63,7 @@ $manager = $workspace['role_name'] !== Role::ORGANIZER;
         <h2 class="section-title">Formato y participantes</h2>
         <div class="tournament-fields">
             <label class="environment-field">Formato<select name="format" required data-format>
-                    <option value="">Selecciona un formato habilitado</option>
+                    <option value="">Elige un formato disponible</option>
                     <?php foreach ($modules as $module): ?>
                     <option value="<?= nuva_escape($module['code']) ?>" <?= $format === $module['code'] ? 'selected' : '' ?>><?= nuva_escape($module['name']) ?></option>
                     <?php endforeach; ?>
@@ -96,7 +96,7 @@ $manager = $workspace['role_name'] !== Role::ORGANIZER;
     </section>
     <section class="nuva-card tournament-panel">
         <h2 class="section-title">Marcador y puntuación</h2>
-        <p class="environment-muted">Adapta estas reglas a tu disciplina. El marcador del encuentro y los puntos de clasificación son independientes. Puedes registrar una decisión sin marcador, explicando el motivo.</p>
+        <p class="environment-muted">Elige cómo se mide cada encuentro y cuántos puntos da para la tabla. También puedes indicar un ganador sin marcador si explicas el motivo.</p>
         <?php if (!empty($started)): ?>
         <p class="environment-notice">Ya hay encuentros: conserva las reglas y fechas actuales. El estado se actualiza al cerrar o reabrir rondas.</p>
         <?php endif; ?>

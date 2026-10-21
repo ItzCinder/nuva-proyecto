@@ -1,7 +1,7 @@
 <div class="environment-heading">
     <div>
         <h2 class="section-title">Invitaciones al entorno</h2>
-        <p class="environment-muted">La persona deberá iniciar sesión y aceptar su incorporación como participante.</p>
+        <p class="environment-muted">Quien reciba la invitación debe iniciar sesión y aceptarla para unirse como participante.</p>
     </div>
     <form method="post">
         <input type="hidden" name="action" value="invite">
@@ -31,7 +31,7 @@
     <?php if (!$invitations): ?>
     <div class="collection__empty nuva-card">
         <h3>No hay invitaciones</h3>
-        <p>Genera un enlace para que nuevos miembros puedan incorporarse.</p>
+        <p>Crea una invitación para que otras personas se unan al entorno.</p>
     </div>
     <?php endif; ?>
     <?php foreach ($invitations as $invitation): ?>

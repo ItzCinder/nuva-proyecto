@@ -16,8 +16,8 @@ use app\Models\Role;
         <link href="/public/shared/css/header.css?v=4" rel="stylesheet">
         <link href="/public/shared/css/tabbar.css?v=4" rel="stylesheet">
         <link href="/public/shared/css/collection.css?v=4" rel="stylesheet">
-        <link href="/public/modules/ConsultaPublica/css/competitions.css?v=5" rel="stylesheet">
-        <link href="/public/modules/Administracion/css/environments.css?v=6" rel="stylesheet">
+        <link href="/public/modules/ConsultaPublica/css/competitions.css?v=6" rel="stylesheet">
+        <link href="/public/modules/Administracion/css/environments.css?v=7" rel="stylesheet">
         <script src="/public/shared/js/layout.js?v=3" defer>
         </script>
     </head>

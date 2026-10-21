@@ -14,7 +14,7 @@ $environmentUrl = '?page=environment&id=' . $id;
         <div>
             <p class="environment-eyebrow">ENTORNO #<?= $id ?></p>
             <h1><?= nuva_escape($workspace['name']) ?></h1>
-            <p class="environment-muted"><?= nuva_escape($workspace['description'] ?: 'Tu comunidad de competiciones en Nuva.') ?></p>
+            <p class="environment-muted"><?= nuva_escape($workspace['description'] ?: 'Torneos y miembros de este entorno.') ?></p>
         </div>
     </div>
     <span class="nuva-badge environment-role"><?= nuva_escape($role) ?></span>
@@ -32,30 +32,30 @@ $environmentUrl = '?page=environment&id=' . $id;
 <?php if ($section === 'overview'): ?>
 <div class="environment-columns">
     <section class="nuva-card environment-panel">
-        <h2 class="section-title">Tu lugar en el entorno</h2>
-        <p><?= nuva_escape(Role::descriptions()[$role] ?? 'Consulta la información autorizada de este entorno.') ?></p>
+        <h2 class="section-title">Tu rol en el entorno</h2>
+        <p><?= nuva_escape(Role::descriptions()[$role] ?? 'Puedes ver la información disponible para tu rol.') ?></p>
         <p class="environment-muted">Dueño: <?= nuva_escape($workspace['owner_name']) ?></p>
         <p class="environment-muted">Creado el <?= nuva_escape(nuva_local_date($workspace['created_at'])) ?></p>
         <a class="nuva-anchor" href="<?= nuva_escape($environmentUrl . '&section=tournaments') ?>"><?= $role === Role::ORGANIZER ? 'Ver torneos asignados' : ($role === Role::PARTICIPANT ? 'Ver mis inscripciones' : 'Ver torneos del entorno') ?> →</a>
     </section>
     <section class="nuva-card environment-panel">
-        <h2 class="section-title"><?= Role::can($role, 'members.manage') ? 'Prepara tu comunidad' : 'Un espacio para competir' ?></h2>
+        <h2 class="section-title"><?= Role::can($role, 'members.manage') ? 'Organiza tu grupo' : 'Un espacio para competir' ?></h2>
         <?php if (Role::can($role, 'members.manage')): ?>
-        <p class="environment-muted">Comparte una invitación para que cada persona decida incorporarse. Después podrás asignar los roles que necesites.</p>
+        <p class="environment-muted">Invita a otras personas con un código o enlace. Cuando se unan, podrás cambiar sus roles.</p>
         <div class="environment-actions">
             <a class="nuva-btn" href="<?= nuva_escape($environmentUrl . '&section=invitations') ?>">Invitar miembros</a>
             <a class="nuva-anchor" href="<?= nuva_escape($environmentUrl . '&section=members') ?>">Gestionar roles</a>
         </div>
         <?php else: ?>
-        <p class="environment-muted">Pertenecer al entorno y estar inscrito en un torneo son pasos distintos. La organización gestiona las inscripciones.</p>
-        <p class="environment-muted">Tus permisos se aplican únicamente a este entorno y a los torneos que te correspondan.</p>
+        <p class="environment-muted">Unirte al entorno no te inscribe en sus torneos. La organización debe inscribirte en cada uno.</p>
+        <p class="environment-muted">Tu rol puede ser distinto en otros entornos.</p>
         <?php endif; ?>
     </section>
 </div>
 <?php if (Role::can($role, 'environment.leave')): ?>
 <details class="nuva-card environment-panel environment-leave">
     <summary>Abandonar este entorno</summary>
-    <p class="environment-muted">Perderás acceso al entorno. La organización ya no podrá gestionarte como miembro. Tu cuenta y los registros históricos se conservan.</p>
+    <p class="environment-muted">Dejarás de ser miembro y perderás el acceso al entorno. Tu cuenta y tus registros anteriores se conservarán.</p>
     <form method="post" class="environment-form">
         <input type="hidden" name="action" value="leave">
         <input type="hidden" name="csrf_token" value="<?= nuva_escape($_SESSION['csrf_token']) ?>">
@@ -95,7 +95,7 @@ $environmentUrl = '?page=environment&id=' . $id;
 <?php elseif ($section === 'modules'): ?>
 <form method="post" class="nuva-card environment-panel environment-form">
     <h2 class="section-title">Módulos de competición</h2>
-    <p class="environment-muted">Selecciona los formatos disponibles para nuevas competiciones. Los torneos y resultados existentes se conservan.</p>
+    <p class="environment-muted">Elige qué formatos se podrán usar al crear torneos. Los torneos ya creados conservarán sus resultados.</p>
     <input type="hidden" name="action" value="modules">
     <input type="hidden" name="csrf_token" value="<?= nuva_escape($_SESSION['csrf_token']) ?>">
     <?php foreach ($modules as $module): ?>

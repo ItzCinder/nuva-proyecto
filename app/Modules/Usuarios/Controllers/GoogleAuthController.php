@@ -102,7 +102,7 @@ class GoogleAuthController
         if ($refreshId) {
             unset($_SESSION['google_photo_refresh_user_id']);
             if ($user->getPictureUrl()) {
-                $_SESSION['profile_flash'] = 'La foto de Google se sincronizó con tu cuenta.';
+                $_SESSION['profile_flash'] = 'Tu foto de Google se actualizó.';
             } else {
                 $_SESSION['profile_error'] = 'Google no proporcionó una foto para esta cuenta.';
             }

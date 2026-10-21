@@ -22,7 +22,7 @@ $rules = [
         </script>
         <script src="/public/modules/Estadisticas/js/statistics.js?v=8" defer>
         </script>
-        <?php foreach (['bootstrap.min.css','global.css?v=5','components/header.css?v=4','components/tabbar.css?v=4','environments.css?v=6','tournaments.css?v=4','statistics.css?v=7'] as $css): ?>
+        <?php foreach (['bootstrap.min.css','global.css?v=5','components/header.css?v=4','components/tabbar.css?v=4','environments.css?v=7','tournaments.css?v=4','statistics.css?v=7'] as $css): ?>
         <link rel="stylesheet" href="<?= htmlspecialchars(nuva_asset('/public/css/' . $css), ENT_QUOTES, 'UTF-8') ?>">
         <?php endforeach; ?>
     </head>

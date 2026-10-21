@@ -1,12 +1,12 @@
 <header class="information-heading">
     <span class="information-eyebrow">EL EQUIPO DETRÁS DE NUVA</span>
     <h1>Somos Kervox</h1>
-    <p>Creamos Nuva para que organizar una competición sea más sencillo: un espacio para reunir personas, preparar torneos y compartir lo que ocurre en cada encuentro.</p>
+    <p>Creamos Nuva para organizar torneos, reunir a sus participantes y consultar los resultados.</p>
 </header>
 <section class="information-panel nuva-card" aria-labelledby="about-project">
-    <h2 id="about-project">Un proyecto, muchas formas de competir</h2>
+    <h2 id="about-project">Sobre el proyecto</h2>
     <p>Nuva es nuestro proyecto de Bachillerato de Informática de UTU. Reúne entornos, roles, participantes, equipos, calendarios y resultados en una misma plataforma.</p>
-    <p>Buscamos que pueda usarse en diferentes disciplinas, con Liga, Eliminación Directa y Sistema Suizo. Las estadísticas complementan la información del torneo, con explicaciones pensadas para quienes están aprendiendo.</p>
+    <p>Puedes organizar ligas, torneos de eliminación directa y de sistema suizo en distintas disciplinas. También puedes registrar estadísticas y pruebas físicas.</p>
     <a class="nuva-anchor" href="?page=guide">Conoce cómo funciona Nuva →</a>
 </section>
 <section aria-labelledby="about-team" class="team-section">

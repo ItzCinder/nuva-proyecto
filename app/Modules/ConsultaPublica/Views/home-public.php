@@ -41,11 +41,11 @@ foreach ($published as $tournament) {
                 <div class="landing-hero__layout">
                     <div class="landing-hero__content">
                         <span class="landing-hero__tag">Bienvenido a Nuva</span>
-                        <h1 id="landing-title">Un lugar para organizar cada competición</h1>
+                        <h1 id="landing-title">Organiza y sigue tus torneos</h1>
                         <p class="landing-hero__text">Explora torneos públicos, fechas y participantes. Si tienes cuenta, crea un entorno y organiza los tuyos.</p>
                         <div class="landing-hero__links">
                             <a class="nuva-btn" href="?page=explore">Ver todos los torneos</a>
-                            <a class="landing-text-link" href="?page=guide">Conocer cómo funciona Nuva →</a>
+                            <a class="landing-text-link" href="?page=guide">Cómo usar Nuva →</a>
                         </div>
                     </div>
                     <div class="landing-search">
@@ -78,7 +78,7 @@ foreach ($published as $tournament) {
                             </i>
                         </span>
                         <h3 class="feature-card__title">Explorar torneos</h3>
-                        <p class="feature-card__text">Descubre competiciones públicas, sus disciplinas, formatos, participantes y fechas.</p>
+                        <p class="feature-card__text">Consulta las fechas, los participantes y los resultados de torneos públicos.</p>
                         <span class="landing-card-link">Ver competiciones →</span>
                     </a>
                     <a class="feature-card" href="?page=environment-create">
@@ -87,7 +87,7 @@ foreach ($published as $tournament) {
                             </i>
                         </span>
                         <h3 class="feature-card__title">Crear un entorno</h3>
-                        <p class="feature-card__text">Abre un espacio para tus miembros, roles, invitaciones y torneos.</p>
+                        <p class="feature-card__text">Reúne a tu club o grupo y organiza sus torneos.</p>
                         <span class="landing-card-link">Crear entorno →</span>
                     </a>
                     <a class="feature-card" href="?page=guide">
@@ -96,7 +96,7 @@ foreach ($published as $tournament) {
                             </i>
                         </span>
                         <h3 class="feature-card__title">Aprender a usar Nuva</h3>
-                        <p class="feature-card__text">Encuentra primeros pasos, roles, formatos y ayuda para cargar e interpretar estadísticas.</p>
+                        <p class="feature-card__text">Aprende a crear torneos, invitar personas y usar las estadísticas.</p>
                         <span class="landing-card-link">Leer la guía →</span>
                     </a>
                 </div>
@@ -135,8 +135,8 @@ foreach ($published as $tournament) {
                 </article>
             </section>
             <section class="landing-cta-box">
-                <h2>¿Quieres organizar tu comunidad?</h2>
-                <p>Crea un entorno, invita a las personas adecuadas y configura tu primer torneo con el formato que necesites.</p>
+                <h2>¿Quieres crear un torneo?</h2>
+                <p>Crea un entorno para tu club o grupo, invita a sus miembros y prepara el torneo.</p>
                 <a href="?page=google-login">Entrar con Google</a>
             </section>
             <?php require nuva_view_path('components/footer'); ?>

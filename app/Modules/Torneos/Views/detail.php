@@ -62,7 +62,7 @@ $count = $tournament['has_team'] ? (int)$tournament['team_count'] : (int)$tourna
 <?php if ($section === 'overview'): ?>
 <div class="tournament-grid">
     <section class="nuva-card tournament-panel">
-        <h2 class="section-title">El torneo de un vistazo</h2>
+        <h2 class="section-title">Datos del torneo</h2>
         <dl class="tournament-facts">
             <div>
                 <dt>Formato</dt>

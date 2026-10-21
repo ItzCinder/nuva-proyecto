@@ -184,7 +184,7 @@ nuva_measurement_field($values, 'angle', 'Dirección de la fuerza respecto al mo
         <section data-trial-step="2" aria-labelledby="trial-save">
             <h3 id="trial-save">Todo listo para guardar</h3>
             <p class="statistics-recap" data-trial-recap aria-live="polite">Nuva calculará los resultados con tus mediciones.</p>
-            <p class="environment-muted">Estos detalles ayudan a comparar pruebas hechas de la misma manera. No necesitas usar términos de física.</p>
+            <p class="environment-muted">Cuenta cómo hiciste la prueba para poder entender los resultados. Puedes usar tus propias palabras.</p>
             <div class="tournament-fields">
                 <label class="environment-field">¿Cómo hiciste la prueba?<input name="procedure" maxlength="200" required value="<?= nuva_escape(nuva_trial_value($values, 'procedure')) ?>" placeholder="Ej.: Corrí entre dos marcas y medí el tiempo">
                 </label>

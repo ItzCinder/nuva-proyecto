@@ -57,9 +57,9 @@ $featured = array_slice($featured, 0, 3);
             <section class="hero__container" aria-labelledby="home-title">
                 <span class="home-eyebrow">TU INICIO EN NUVA</span>
                 <h1 id="home-title" class="hero__title">Organiza y descubre competiciones</h1>
-                <p class="hero__text">Crea un entorno para tu comunidad, prepara torneos y explora los que ya están publicados. Todo comienza desde aquí.</p>
+                <p class="hero__text">Crea torneos para tu club o grupo y consulta otras competiciones públicas.</p>
                 <div class="home-actions">
-                    <a class="hero__btn nuva-btn" href="?page=guide">Conocer cómo funciona Nuva <i data-lucide="arrow-right" aria-hidden="true">
+                    <a class="hero__btn nuva-btn" href="?page=guide">Cómo usar Nuva <i data-lucide="arrow-right" aria-hidden="true">
                         </i>
                     </a>
                     <a class="home-link" href="?page=environment-create">Crear un entorno</a>
@@ -144,8 +144,8 @@ $featured = array_slice($featured, 0, 3);
             <section class="home-section home-start nuva-card" aria-labelledby="home-start-title">
                 <div>
                     <span class="home-eyebrow">PRIMEROS PASOS</span>
-                    <h2 id="home-start-title" class="section-title">Prepara tu comunidad</h2>
-                    <p class="home-muted">Un entorno reúne miembros, roles y torneos. Cuando lo tengas listo, podrás elegir el formato y publicar cada competición.</p>
+                    <h2 id="home-start-title" class="section-title">Organiza tu grupo</h2>
+                    <p class="home-muted">Primero crea un entorno para tu club o grupo. Desde allí podrás invitar miembros y crear torneos.</p>
                 </div>
                 <div class="home-start__links">
                     <a class="nuva-btn" href="?page=environment-create">Crear entorno</a>

@@ -16,7 +16,7 @@ foreach ($scheduled as $match) {
 <section class="nuva-card tournament-panel tournament-agenda">
     <h2 class="section-title">Agenda de encuentros</h2>
     <?php if (!$scheduled): ?>
-    <p class="environment-muted">Aún no hay encuentros con fecha asignada.</p>
+    <p class="environment-muted">Todavía no hay encuentros con fecha.</p>
     <?php endif; ?>
     <?php foreach ($scheduled as $match): ?>
     <div class="tournament-roster">

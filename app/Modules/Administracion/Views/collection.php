@@ -16,7 +16,7 @@ $environmentVisible = ($collectionAll ?? false) ? $environmentMatches : array_sl
         <div>
             <p class="environment-eyebrow">TU ESPACIO EN NUVA</p>
             <h1 id="environment-list-title" class="section-title">Mis entornos</h1>
-            <p class="environment-muted">Organiza tu comunidad o accede a los entornos a los que perteneces.</p>
+            <p class="environment-muted">Crea un entorno o entra a uno del que ya seas miembro.</p>
         </div>
         <a class="nuva-btn" href="?page=environment-create">
             <i data-lucide="plus" aria-hidden="true">
@@ -50,7 +50,7 @@ $environmentVisible = ($collectionAll ?? false) ? $environmentMatches : array_sl
                 <span class="nuva-badge environment-role"><?= nuva_escape($environmentItem['role_name']) ?></span>
             </div>
             <h2><?= nuva_escape($environmentItem['name']) ?></h2>
-            <p class="environment-muted"><?= nuva_escape($environmentItem['description'] ?: 'Un espacio para organizar y compartir competiciones.') ?></p>
+            <p class="environment-muted"><?= nuva_escape($environmentItem['description'] ?: 'Torneos y miembros de este entorno.') ?></p>
             <div class="environment-card__bottom">
                 <span class="environment-muted"><?= (int) $environmentItem['member_count'] ?> miembros</span>
                 <span class="environment-card__arrow" aria-hidden="true">→</span>

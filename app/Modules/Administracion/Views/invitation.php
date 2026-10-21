@@ -2,7 +2,7 @@
 <?php if (!$invitation): ?>
 <section class="nuva-card environment-panel">
     <h1>Invitación no disponible</h1>
-    <p class="environment-muted">El código no es válido o la invitación fue revocada. Solicita una nueva a la organización.</p>
+    <p class="environment-muted">El código no es válido o la invitación fue anulada. Pide otra a la organización.</p>
 </section>
 <?php else: ?>
 <section class="nuva-card environment-panel environment-invitation">
@@ -17,7 +17,7 @@
     <p>Ya perteneces a este entorno.</p>
     <a class="nuva-btn" href="?page=environment&amp;id=<?= (int) $invitation['id'] ?>">Abrir entorno</a>
     <?php else: ?>
-    <p>Al aceptar, te incorporarás como <strong>participante</strong>. Los organizadores autorizados podrán inscribirte en torneos de este entorno.</p>
+    <p>Al aceptar, te unirás como <strong>participante</strong>. La organización podrá inscribirte en los torneos de este entorno.</p>
     <p class="environment-muted">Esta invitación no te inscribe automáticamente en un torneo. Puedes abandonar el entorno desde su resumen.</p>
     <form method="post" class="environment-form">
         <input type="hidden" name="action" value="join">

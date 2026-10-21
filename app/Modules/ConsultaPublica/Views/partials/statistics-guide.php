@@ -5,9 +5,9 @@
         <div class="guide-chapter__body">
             <ol class="guide-instructions">
                 <li>Como dueño o administrador, abre tu entorno y entra en <strong>Estadísticas y plantillas</strong>.</li>
-                <li>Marca las plantillas que quieres ofrecer y pulsa <strong>Guardar opciones disponibles</strong>. Puedes comenzar solo con <strong>Recorrido y tiempo</strong>.</li>
+                <li>Marca las plantillas que quieres ofrecer y pulsa <strong>Guardar cambios</strong>. Puedes comenzar solo con <strong>Recorrido y tiempo</strong>.</li>
                 <li>Abre el torneo y entra en <strong>Estadísticas → Configurar</strong>.</li>
-                <li>Marca <strong>Permitir registrar</strong> para aceptar nuevas pruebas y <strong>Mostrar</strong> para que puedan consultarse. Pulsa <strong>Guardar selección del torneo</strong>.</li>
+                <li>Marca <strong>Permitir registrar</strong> para aceptar nuevas pruebas y <strong>Mostrar</strong> para que puedan consultarse. Pulsa <strong>Guardar cambios</strong>.</li>
             </ol>
             <p>El dueño, el administrador y el organizador asignado pueden gestionar las estadísticas del torneo. Un participante puede consultar lo que tenga permitido, pero no cargar ni corregir las mediciones.</p>
             <p><strong>¿No aparece «Añadir una prueba»?</strong> Entra en Estadísticas → Registrar datos → Prueba física. Si no aparece, revisa tu rol, que la plantilla esté habilitada en el entorno y que tenga marcada la opción Permitir registrar en ese torneo.</p>
@@ -30,7 +30,7 @@
                 <strong>¿Qué devuelve Nuva?</strong>
                 <p><strong>Rapidez media: 5 m/s.</strong> Recorrió un promedio de 5 metros por segundo: Nuva dividió los 10 metros entre los 2 segundos. No significa que se moviera a esa rapidez durante todo el recorrido.</p>
             </div>
-            <p>Para un intento real, escribe tus propias mediciones y deja desmarcada la opción de datos de ejemplo. Los números que aparecen como ayuda dentro de los campos no se guardan si no los completas.</p>
+            <p>Escribe las mediciones de tu prueba. Los números que aparecen como ejemplo en los campos no se guardan si no los completas.</p>
         </div>
     </details>
     <details class="nuva-card guide-chapter" name="statistics-guide" id="estadisticas-plantillas">
@@ -104,7 +104,6 @@
                 <div><dt>Nombre para reconocerla</dt><dd>Una etiqueta corta, como «Recorrido de 10 metros». Nuva propone un nombre que puedes cambiar.</dd></div>
                 <div><dt>Fecha y hora</dt><dd>Cuándo se hizo el intento, en horario de Uruguay. Revisa el dato si cargas una prueba anterior.</dd></div>
                 <div><dt>Enlace al video o registro</dt><dd>Opcional. Pega un enlace HTTP o HTTPS si tienes evidencia y permiso para compartirla. Nuva guarda el enlace; no sube el video.</dd></div>
-                <div><dt>Son datos de ejemplo</dt><dd>Márcalo si los números son ficticios o una demostración. Los ejemplos se distinguen de las pruebas reales.</dd></div>
             </dl>
         </div>
     </details>
@@ -161,7 +160,7 @@
                 <li>Como dueño o administrador, abre <strong>Estadísticas y plantillas</strong> del entorno y busca <strong>Crear una estadística manual</strong>.</li>
                 <li>Indica su nombre y una descripción de lo que se cuenta. La unidad es opcional: por ejemplo, «s» para un tiempo.</li>
                 <li>Elige <strong>Entero</strong> para conteos como 3 asistencias, o <strong>Decimal</strong> para medidas como 2,5 segundos. Decide si corresponde a personas o equipos inscritos.</li>
-                <li>Elige cómo resumir los registros y pulsa <strong>Crear estadística</strong>. Después habilítala en el catálogo del entorno y selecciónala en el torneo.</li>
+                <li>Elige cómo resumir los registros y pulsa <strong>Crear estadística</strong>. Después actívala en las opciones del entorno y selecciónala en el torneo.</li>
                 <li>En el torneo abre <strong>Estadísticas → Registrar datos → Estadística manual</strong>, elige la estadística y la persona o equipo, escribe el valor y la fecha, y pulsa <strong>Guardar valor manual</strong>.</li>
             </ol>
             <dl class="guide-definitions">
@@ -171,7 +170,7 @@
                 <div><dt>Mostrar el menor</dt><dd>Por ejemplo, tiempos 12 y 11 segundos se resumen como <strong>11 s</strong>.</dd></div>
                 <div><dt>Mostrar el mayor</dt><dd>Por ejemplo, puntuaciones 6 y 8 se resumen como <strong>8</strong>.</dd></div>
             </dl>
-            <p>Si cambia lo que quieres contar, su unidad o la regla de resumen, crea otra estadística. Así los valores anteriores conservan su significado. Los datos de demostración deben marcarse como tales también en la carga manual.</p>
+            <p>Si cambia lo que quieres contar, su unidad o la regla de resumen, crea otra estadística. Así los valores anteriores conservan su significado.</p>
         </div>
     </details>
     <details class="nuva-card guide-chapter" name="statistics-guide" id="estadisticas-privacidad">
