@@ -1,117 +1,140 @@
 # Nuva
 
+Nuva es una aplicación web para gestionar entornos deportivos, miembros,
+roles, torneos, competiciones y estadísticas. Está construida con PHP,
+Apache y MariaDB, y utiliza Google para el inicio de sesión.
 
-## Instalación con Docker
+## Configuración con Docker
+
+### 1. Crear la configuración
+
+Desde la carpeta principal del proyecto, ejecuta:
 
 ```bash
 sh docker/preparar.sh
-# Completa los datos de Google en .env.docker.
+```
+
+El comando crea `.env.docker` y genera contraseñas seguras para Nuva y para
+la cuenta administradora de MariaDB. El archivo no debe publicarse ni
+compartirse.
+
+Internamente, `preparar.sh` hace lo siguiente:
+
+1. Comprueba si `.env.docker` ya existe. Si existe, conserva su configuración.
+2. Genera dos contraseñas aleatorias diferentes con `openssl`.
+3. Copia `.env.docker.example` como `.env.docker`.
+4. Escribe las contraseñas generadas en la nueva configuración.
+
+Para usar inicio de sesión con Google, completa en `.env.docker`:
+
+```dotenv
+GOOGLE_CLIENT_ID=tu-client-id
+GOOGLE_CLIENT_SECRET=tu-client-secret
+GOOGLE_REDIRECT_URI=http://localhost:8080/public/index.php?page=google-callback
+```
+
+`NUVA_HTTP_PORT` permite cambiar el puerto local. Por ejemplo,
+`NUVA_HTTP_PORT=8081` hará que Nuva esté disponible en
+`http://localhost:8081`.
+
+### 2. Crear e iniciar los contenedores
+
+```bash
 docker compose --env-file .env.docker up -d --build
 ```
 
-Abre `http://localhost:8080`. Se crean Apache/PHP y MariaDB como servicios separados. El primer inicio incluye 64 personas ficticias, 6 entornos y 54 torneos: 18 de cada formato, con resultados, fechas y estadísticas. La carga no se duplica al reiniciar y no cambia el esquema actual.
+Este comando:
 
-Consulta [despliegue y respaldos](docs/despliegue.md) para publicar mediante el Apache del servidor, configurar Google, consultar registros y usar una instalación directa sobre Apache y MariaDB. No se necesita XAMPP.
+1. Construye el contenedor web con PHP 8.2 y Apache.
+2. Crea el contenedor de MariaDB.
+3. Inicializa la estructura de la aplicación en una base nueva.
+4. Crea la red interna entre la aplicación y MariaDB.
+5. Inicia ambos servicios en segundo plano.
 
-## Instalación sin contenedores
+Abre la aplicación en:
 
-1. Instala las dependencias con `composer install --no-dev`.
-2. Importa `nuvabd.sql` únicamente en una base nueva. Sobre una base existente, aplica las migraciones pendientes.
-3. Copia `.env.example` a `.env` y completa la conexión a MariaDB y los datos de Google. Usa una cuenta de base de datos con permisos limitados a NuvaBD.
-4. Publica la carpeta `public` desde Apache y configura el alias `/public/`, como explica la guía de despliegue.
-5. Registra en Google Cloud la misma dirección de `GOOGLE_REDIRECT_URI`. En un dominio con HTTPS, establece `SESSION_SECURE_COOKIE=1`.
+```text
+http://localhost:8080
+```
 
-La foto de perfil usa la URL HTTPS que entrega Google. No requiere crear carpetas de subidas ni permisos de escritura sobre el proyecto.
+La aplicación espera a que MariaDB esté disponible antes de iniciar el
+servicio web.
 
-## Notas
+El puerto se publica solamente en `127.0.0.1`. Esto permite colocar un
+Apache o un proxy inverso delante del contenedor y publicar Nuva mediante
+HTTPS.
 
-- La configuración se carga con `nuva_load_environment()`: admite `.env` o variables del servidor/contenedor.
-- `.env` y `.env.docker` son privados y no deben versionarse.
-- La sesión guarda el identificador del usuario; el perfil se consulta desde `users`.
-- [Seguridad aplicada](docs/seguridad.md): entradas numéricas, consultas preparadas, sesiones, archivos privados y registros.
-- [Guía para leer el código](docs/guia-del-codigo.md): funciones, variables y recorrido MVC.
+Cuando se utiliza HTTPS, configura en `.env.docker`:
 
-## Unidad y tipo de dato de estadísticas (RF-016)
+```dotenv
+GOOGLE_REDIRECT_URI=https://tu-dominio.example/public/index.php?page=google-callback
+SESSION_SECURE_COOKIE=1
+```
 
-La tabla `member_stat_types` incluye estos campos:
+La dirección configurada en Google Cloud debe ser exactamente igual a
+`GOOGLE_REDIRECT_URI`.
 
-- `unit`: unidad del dato, por ejemplo `s`, `m`, `kg` o `%`. Es opcional; utiliza `NULL` cuando no corresponda una unidad.
-- `data_type`: `integer` para conteos enteros o `decimal` para mediciones con fracciones. El valor predeterminado es `integer`, compatible con los registros existentes. La primera versión admite estadísticas numéricas.
+## Qué ocurre al levantar Docker
 
-Los valores de `member_stat_values` y `tournament_participant_stat_values` se almacenan como `DECIMAL(20,8)` para conservar hasta ocho decimales. Por ejemplo, una estadística de tiempo puede definir `unit = 's'`, `data_type = 'decimal'` y almacenar `12.345`.
+Cuando ejecutas `docker compose ... up -d --build`, Compose lee
+`compose.yaml` y realiza este proceso:
 
-Para instalaciones nuevas, importa `nuvabd.sql`. Para una base existente, ejecuta una sola vez `database/migrations/001_stat_unit_and_data_type.sql` en lugar de volver a importar el esquema. La migración conserva los valores anteriores, establece el tipo `integer` y deja la unidad en `NULL` sin inferirla.
+1. Construye la imagen del servicio web usando `docker/Dockerfile`.
+2. Descarga la imagen oficial de MariaDB si todavía no está disponible.
+3. Crea los contenedores `web` y `database`.
+4. Crea una red para que ambos servicios se comuniquen de forma privada.
+5. Crea los volúmenes persistentes de Nuva.
+6. Inicia primero MariaDB y espera a que pase su comprobación de salud.
+7. Inicia el contenedor web cuando la base de datos está preparada.
 
-La carga de estadísticas valida que los valores de tipo `integer` no tengan fracciones y conserva la definición utilizada por los registros históricos.
+El `Dockerfile` prepara la imagen web de forma sencilla:
 
-## Listados de la interfaz
+1. Parte de PHP 8.2 con Apache sobre Debian.
+2. Instala las extensiones PHP que Nuva necesita para MariaDB, textos y Google.
+3. Instala las dependencias de PHP con Composer.
+4. Copia el código de la aplicación al contenedor.
+5. Copia las configuraciones de Apache, PHP y el script de inicio.
+6. Crea las carpetas de sesiones e imágenes y asigna sus permisos.
+7. Define `start.sh` como el proceso inicial del contenedor.
 
-- Competiciones muestra hasta tres tarjetas; `?page=competitions-all` abre el listado completo y conserva los filtros.
-- En Cuenta, las pestañas Mis torneos y Mis entornos incluyen filtros y enlaces a `?page=my-tournaments` y `?page=my-environments`. Estos listados requieren sesión.
-- Los filtros se envían por GET y funcionan sin JavaScript. Permiten buscar por nombre o disciplina y combinar categoría, disciplina, estado y formato; los entornos tienen búsqueda por nombre.
-- Las tarjetas de competiciones y Mis torneos se consultan desde la base de datos. Las tarjetas antiguas codificadas en PHP se retiraron.
-- `collection.php`, `collection-tabs.php` y `competition-card.php` reutilizan los listados y tarjetas dentro de la estructura PHP existente.
+Al comenzar el contenedor web, `start.sh` prepara los permisos, carga los
+datos de ejemplo si `LOAD_DEMO_DATA=1` y finalmente inicia Apache. El
+contenedor de MariaDB utiliza `nuvabd.sql` y los archivos de configuración de
+`docker/mariadb` durante su primera inicialización.
 
-## Gestión de entornos
+## Volúmenes de Docker
 
-- Desde **Entornos** se puede crear un espacio, consultar los espacios propios y abrir una invitación.
-- El creador se convierte en dueño. Los permisos y secciones dependen del rol dentro de cada entorno: dueño, administrador general, organizador o participante.
-- La gestión del entorno incluye información básica, miembros y roles, invitaciones, módulos y auditoría. También permite crear torneos en los módulos habilitados.
-- En una base existente, ejecuta `database/migrations/002_environments_and_roles.sql`. En una instalación nueva, `nuvabd.sql` ya incluye los cambios.
-- Consulta `docs/entornos.md` para conocer los permisos, fuentes de la tercera entrega, instalación y pruebas.
+Los volúmenes mantienen los datos aunque los contenedores se detengan o se
+reconstruyan.
 
-## Si falla el acceso con Google
+| Volumen | Ubicación dentro del contenedor | Para qué sirve |
+|---|---|---|
+| `database` | `/var/lib/mysql` | Conserva los usuarios, entornos, torneos y demás información de MariaDB. |
+| `sessions` | `/var/lib/php/sessions` | Conserva las sesiones de inicio de sesión de PHP. |
+| `environment-pictures` | `/var/www/nuva/public/assets/uploads/environments` | Conserva las imágenes subidas para los entornos. |
 
-- Google y el guardado de la cuenta son pasos distintos. Si la base de datos no está disponible, comprueba que MariaDB esté iniciado y que exista la base indicada por `DB_NAME`, con la tabla `users`.
-- Para una base nueva, importa `nuvabd.sql`; no lo vuelvas a importar sobre una base con datos.
-- Después de corregir el problema, vuelve a `?page=login` y utiliza **Continuar con Google**. La URL de callback contiene un código de un solo uso y no debe reutilizarse.
-- El callback muestra los errores recuperables en la pantalla de acceso y registra el tipo de fallo en el log de PHP, sin guardar códigos de Google ni tokens.
-- El acceso real debe comenzar en la dirección configurada en `GOOGLE_REDIRECT_URI` (en esta instalación, `http://localhost`).
+También existen estos montajes de archivos, que no son volúmenes de datos:
 
-## Torneos y datos de demostración
+- `nuvabd.sql` se monta como archivo de inicialización de MariaDB. Solo se
+  utiliza automáticamente cuando el volumen `database` está vacío.
+- `docker/mariadb/20-permissions.sql` configura los permisos iniciales de la
+  base.
+- `docker/mariadb/nuva.cnf` aplica la configuración de MariaDB.
 
-- Para actualizar una base existente, ejecuta `database/migrations/003_tournaments.sql`. Las instalaciones nuevas ya tienen esas columnas en `nuvabd.sql`.
-- `php demostracion/cargar.php --owner-id=TU_ID` agrega la demostración completa de seis entornos y 54 torneos, y completa los ejemplos anteriores reconocidos con estadísticas, planteles y relatos de sus actividades. No duplica los datos al repetirlo. Consulta `demostracion/README.md`.
-- `database/borrar_base_de_datos.php` elimina toda NuvaBD únicamente con el argumento de confirmación indicado en el propio archivo. Nunca forma parte de la carga de ejemplo.
-- Consulta `docs/torneos.md` para conocer las pantallas, formatos, permisos, calendario y fuentes documentales.
+## Configuración opcional
 
-### Inicio y guía
+En `.env.docker` también puedes ajustar:
 
-El Home y la portada pública consultan torneos y entornos reales: sus cifras y accesos por categoría no usan valores de relleno. `?page=guide` ofrece una guía de uso dentro de Nuva sobre primeros pasos, roles, torneos, formatos y visibilidad. Las tarjetas de Competiciones y Mis torneos comparten un diseño responsive y enlazan a cada torneo.
+```dotenv
+LOAD_DEMO_DATA=1
+SESSION_SECURE_COOKIE=0
+```
 
-### Ajustes de cuenta
+`LOAD_DEMO_DATA=1` habilita la carga inicial de información de ejemplo.
+Puedes cambiarlo a `0` si quieres iniciar con una instalación vacía.
+`SESSION_SECURE_COOKIE` debe valer `1` cuando Nuva se publica mediante HTTPS.
 
-En `?page=settings`, cada persona puede editar su nombre visible, sincronizar de nuevo la foto de su cuenta de Google y cerrar sesión. El nombre elegido en Nuva se conserva al volver a entrar con Google. La foto usa la URL HTTPS de `picture` que devuelve Google; ya no se descarga en `public/assets/uploads/users`, porque esa carpeta puede no ser escribible para Apache. Si la imagen falla, se muestra el icono de Nuva. Las cuentas que ya tenían la foto vacía deben usar **Sincronizar foto de Google** una vez para obtenerla.
-
-### Funcionamiento de los torneos
-
-Aplicar `database/migrations/004_competition_engine.sql` sobre bases existentes, después de las migraciones anteriores. Incluye rondas, encuentros, resultados y reglas configurables. Para instalaciones nuevas ya está integrado en `nuvabd.sql`.
-
-Uso y criterios: [docs/torneos.md](docs/torneos.md).
-
-Ejemplos con enfrentamientos y resultados: `php demostracion/cargar.php --owner-id=ID`. Incluye los tres formatos y los estados planificado, en curso y finalizado.
-
-### Módulos MVC y estadísticas
-
-La aplicación está organizada en los doce módulos de `app/Modules`, con recursos propios en `public/modules`. Ver [organización](docs/modulos.md) y [uso de estadísticas](docs/estadisticas.md). Esta integración de estadísticas no requiere cambios del esquema SQL.
-
-En un entorno, abre **Estadísticas y plantillas** para habilitar el catálogo. En un torneo, abre **Estadísticas** para seleccionar opciones, registrar pruebas guiadas y consultar indicadores. Para ejemplos: `php demostracion/cargar.php --owner-id=ID`.
-
-Para recorrer el código paso a paso y localizar dónde cambiar cada pantalla, lee [la guía del código](docs/guia-del-codigo.md).
-
-## Suricata en AlmaLinux
-
-La carpeta [suricata-almalinux](suricata-almalinux/README.md) es independiente de Nuva. Incluye el instalador, la configuración de IDS/IPS y una [guía manual con comandos de copia](suricata-almalinux/INSTALACION-MANUAL.md) para un servidor con Apache y MariaDB. Crear estos archivos no instala Suricata en el servidor.
-
-## Información pública y equipo
-
-El pie de cada pantalla enlaza a la guía, Sobre nosotros, Condiciones de uso y Copyright. Las tres páginas informativas se pueden abrir sin iniciar sesión: `?page=about`, `?page=terms` y `?page=copyright`.
-
-Las páginas viven en `app/Modules/ConsultaPublica/Views/information`; su controlador es `InformationController.php`. Los nombres y las rutas de las fotos se editan en `ConsultaPublica/Models/Team.php`. Se muestran únicamente nombres y fotos, sin cargos ni biografías individuales. Las imágenes se sirven desde `public/assets/team`, sin depender de enlaces privados de Drive. La foto de Jean corresponde al archivo actualizado «Jean» de la carpeta del equipo.
-
-La guía de estadísticas se encuentra en `ConsultaPublica/Views/partials/statistics-guide.php`. Los enlaces a un apartado desplegable lo abren automáticamente. Condiciones y Copyright contienen las reglas de uso, visibilidad de mediciones y créditos de los componentes externos; no incorporan pagos ni un nuevo paso de aceptación al iniciar sesión.
-
-
-Las fotos de los entornos se cargan al crearlos o desde **Información del entorno**. Se guardan en `workspaces.picture` y en `public/assets/uploads/environments`, con JPG, PNG o WebP de hasta 2 MB. Es posible reemplazarlas o quitarlas. Docker conserva esta carpeta en un volumen y el respaldo incluye sus imágenes.
-
-La carpeta [demostracion](demostracion/README.md) reúne el cargador completo, sus datos y los créditos de los escudos. Los cargadores antiguos de `database/demo` son accesos de compatibilidad al mismo script.
+Si cambiaste las credenciales de MariaDB después de crear el volumen
+`database`, las nuevas credenciales no se aplican automáticamente. Debes
+restaurar la configuración original o eliminar el volumen y crear la
+instalación de nuevo, teniendo en cuenta que eliminarlo borra los datos.
